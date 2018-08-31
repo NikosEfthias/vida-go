@@ -23,7 +23,10 @@
 #   non-go = false
 #   go-tests = true
 #   unused-packages = true
-
+[[constraint]]
+	name = "github.com/julienschmidt/httprouter"
+[[constraint]]
+	name = "gopkg.in/mgo.v2"
 
 [prune]
   go-tests = true
