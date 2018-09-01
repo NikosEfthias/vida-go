@@ -17,7 +17,7 @@ func init() {
 		switch {
 		case os.IsNotExist(err):
 			d, _ := json.MarshalIndent(conf, "", "	")
-			f, err = os.OpenFile("conf.json", os.O_CREATE|os.O_WRONLY, 0666)
+			f, err = os.OpenFile("conf.json", os.O_CREATE|os.O_WRONLY, 0644)
 			if nil != err {
 				panic(err)
 			}
