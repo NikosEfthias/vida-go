@@ -12,7 +12,7 @@ type Log_type uint8
 var file__error, file__info, file__log io.Writer
 
 const opts = os.O_CREATE | os.O_WRONLY | os.O_APPEND
-const perm = 0666
+const perm = 0644
 const (
 	ERR Log_type = iota
 	INFO
