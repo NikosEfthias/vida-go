@@ -4,7 +4,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/k0kubun/pp"
 	"github.com/mugsoft/vida/helpers"
 	"github.com/mugsoft/vida/models"
 )
@@ -47,7 +46,6 @@ func Add_or_update_user(u *models.User) {
 		delete(__cache__user.by__token, old_u.Token)
 	}
 	__cache__user.by__token[u.Token] = u
-	pp.Println(__cache__user)
 }
 
 func __is__expired(u *models.User) *models.User {

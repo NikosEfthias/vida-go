@@ -38,4 +38,10 @@ func mount__user(mux *httprouter.Router) {
 			msg, err := user.Service_login(email, phone, password)
 			__respond__from__service(msg, err, w, r)
 		})
+
+	mux.GET(PREFIX__USER+"/:token",
+		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+			msg, err := user.Service_get(p.ByName("token"))
+			__respond__from__service(msg, err, w, r)
+		})
 }

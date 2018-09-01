@@ -13,16 +13,16 @@ const __COL_USER_STR = "users"
 var __col = db__get().C(__COL_USER_STR)
 
 type User struct {
-	Id             string    `bson:"id"`
-	Name           string    `bson:"name"`
-	Lastname       string    `bson:"lastname"`
-	Phone          string    `bson:"phone"`
-	Email          string    `bson:"email"`
-	Password       string    `bson:"password"`
-	CreatedAt      time.Time `bson:"created_at"`
-	UpdatedAt      time.Time `bson:"updated_at"`
-	Login__expires time.Time `bson:"-"`
-	Token          string    `bson:"-"`
+	Id             string    `bson:"id" json:"id"`
+	Name           string    `bson:"name" json:"name"`
+	Lastname       string    `bson:"lastname" json:"lastname"`
+	Phone          string    `bson:"phone" json:"phone"`
+	Email          string    `bson:"email" json:"email"`
+	Password       string    `bson:"password" json:"-"`
+	CreatedAt      time.Time `bson:"created_at" json:"created_at"`
+	UpdatedAt      time.Time `bson:"updated_at" json:"updated_at"`
+	Login__expires time.Time `bson:"-" json:"-"`
+	Token          string    `bson:"-" json:"token"`
 }
 
 //User_new generates id and date fields of the user and hashes password then saves
