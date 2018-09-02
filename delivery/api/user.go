@@ -44,4 +44,17 @@ func mount__user(mux *httprouter.Router) {
 			msg, err := user.Service_get(p.ByName("token"))
 			__respond__from__service(msg, err, w, r)
 		})
+
+	mux.POST(PREFIX__USER+"/update/:token/:field",
+		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+			if nil != __parse__form(w, r) {
+				return
+			}
+			msg, err := user.Service_update(p.ByName("field"), p.ByName("token"), __fv(r, "value"))
+			__respond__from__service(msg, err, w, r)
+		})
+	mux.POST(PREFIX__USER+"/pp", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+
+	})
+
 }

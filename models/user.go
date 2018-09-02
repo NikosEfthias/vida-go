@@ -18,6 +18,9 @@ type User struct {
 	Lastname       string    `bson:"lastname" json:"lastname"`
 	Phone          string    `bson:"phone" json:"phone"`
 	Email          string    `bson:"email" json:"email"`
+	Notification   int       `bson:"notification" json:"notification"`
+	FbAccountName  string    `json:"fb_account_name" bson:"fb_account_name"`
+	FbProfilePic   string    `json:"fb_profile_pic" bson:"fb_profile_pic"`
 	Password       string    `bson:"password" json:"-"`
 	CreatedAt      time.Time `bson:"created_at" json:"created_at"`
 	UpdatedAt      time.Time `bson:"updated_at" json:"updated_at"`
@@ -62,4 +65,16 @@ func User_get(u *User) error {
 	return __col.Find(bson.M{
 		"$or": _q,
 	}).One(u)
+}
+
+func User_update(userid string, fields map[string]interface{}, updatedU *User) error {
+	err := __col.Update(bson.M{"id": userid}, bson.M{"$set": fields})
+	if nil != err {
+		return err
+	}
+	if nil == updatedU {
+		return nil
+	}
+	updatedU.Id = userid
+	return User_get(updatedU)
 }

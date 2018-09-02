@@ -59,4 +59,12 @@ func __is__expired(u *models.User) *models.User {
 	return u
 }
 
+func Extend_token(u *models.User) {
+	if nil == u {
+		return
+	}
+	u.Login__expires = time.Now().Add(time.Hour * 4)
+}
+
+//TODO:  add setter so data can be locked
 //TODO:  add function to remove old docs for every 5 mins
