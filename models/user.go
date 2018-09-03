@@ -26,6 +26,7 @@ type User struct {
 	UpdatedAt      time.Time `bson:"updated_at" json:"updated_at"`
 	Login__expires time.Time `bson:"-" json:"-"`
 	Token          string    `bson:"-" json:"token"`
+	ProfilePicURL  string    `bson:"profile_pic_url" json:"profile_pic_url"`
 }
 
 //User_new generates id and date fields of the user and hashes password then saves

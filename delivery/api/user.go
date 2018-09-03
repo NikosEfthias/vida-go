@@ -1,9 +1,12 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/mugsoft/tools/bytesize"
+	"github.com/mugsoft/vida/helpers"
 	"github.com/mugsoft/vida/services/user"
 )
 
@@ -53,8 +56,18 @@ func mount__user(mux *httprouter.Router) {
 			msg, err := user.Service_update(p.ByName("field"), p.ByName("token"), __fv(r, "value"))
 			__respond__from__service(msg, err, w, r)
 		})
-	mux.POST(PREFIX__USER+"/pp", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
+	mux.POST(PREFIX__USER+"/pp/:token", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		if nil != __parse__multipart__form(w, r, int64(bytesize.MB*5)) {
+			return
+		}
+		f, _, err := r.FormFile("file")
+		if nil != err {
+			helpers.Log(helpers.ERR, err.Error())
+			json.NewEncoder(w).Encode(map[string]string{"error": "cannot parse file"})
+		}
+		msg, err := user.Service_profile_pic(p.ByName("token"), f)
+		__respond__from__service(msg, err, w, r)
 	})
 
 }
