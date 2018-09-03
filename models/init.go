@@ -20,3 +20,8 @@ func db__get() *mgo.Database {
 	db = _ses.DB(config.Get("DB"))
 	return db
 }
+
+type Defaults struct {
+	CreatedAt time.Time `bson:"created_at" json:"created_at"`
+	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
+}

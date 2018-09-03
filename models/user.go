@@ -22,11 +22,10 @@ type User struct {
 	FbAccountName  string    `json:"fb_account_name" bson:"fb_account_name"`
 	FbProfilePic   string    `json:"fb_profile_pic" bson:"fb_profile_pic"`
 	Password       string    `bson:"password" json:"-"`
-	CreatedAt      time.Time `bson:"created_at" json:"created_at"`
-	UpdatedAt      time.Time `bson:"updated_at" json:"updated_at"`
 	Login__expires time.Time `bson:"-" json:"-"`
 	Token          string    `bson:"-" json:"token"`
 	ProfilePicURL  string    `bson:"profile_pic_url" json:"profile_pic_url"`
+	Defaults
 }
 
 //User_new generates id and date fields of the user and hashes password then saves
@@ -69,7 +68,13 @@ func User_get(u *User) error {
 }
 
 func User_update(userid string, fields map[string]interface{}, updatedU *User) error {
-	err := __col.Update(bson.M{"id": userid}, bson.M{"$set": fields})
+	var __fields_with_updated_at = map[string]interface{}{
+		"updated_at": time.Now(),
+	}
+	for k, v := range fields {
+		__fields_with_updated_at[k] = v
+	}
+	err := __col.Update(bson.M{"id": userid}, bson.M{"$set": __fields_with_updated_at})
 	if nil != err {
 		return err
 	}
