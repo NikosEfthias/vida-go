@@ -69,14 +69,13 @@ func Service_update(key, token string, value interface{}) (string, error) {
 	return "success", nil
 }
 
-func Service_profile_pic(token string, file io.ReadCloser) (string, error) {
+func Service_profile_pic(token string, file io.Reader) (string, error) {
 	const LIMIT_FILESIZE = int64(bytesize.MB * 10)
 	var ALLOWED_MIMES = []string{"jpeg", "jpg", "png", "jpeg"}
 	var MIME string
 	if file == nil {
 		return "", fmt.Errorf("cannot read the file")
 	}
-	defer file.Close()
 	u := storage.Get_user_by_token(token)
 	if nil == u {
 		return "", services.ERR_N_LOGIN

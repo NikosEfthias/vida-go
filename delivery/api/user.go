@@ -66,6 +66,7 @@ func mount__user(mux *httprouter.Router) {
 			helpers.Log(helpers.ERR, err.Error())
 			json.NewEncoder(w).Encode(map[string]string{"error": "cannot parse file"})
 		}
+		defer f.Close()
 		msg, err := user.Service_profile_pic(p.ByName("token"), f)
 		__respond__from__service(msg, err, w, r)
 	})
