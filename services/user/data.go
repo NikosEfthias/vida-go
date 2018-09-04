@@ -1,14 +1,12 @@
 package user
 
 import (
-	"encoding/base64"
 	"fmt"
 	"io"
-	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/mugsoft/tools/bytesize"
+	"github.com/mugsoft/vida/helpers"
 	"github.com/mugsoft/vida/models"
 	"github.com/mugsoft/vida/services"
 	"github.com/mugsoft/vida/services/storage"
@@ -70,9 +68,8 @@ func Service_update(key, token string, value interface{}) (string, error) {
 }
 
 func Service_profile_pic(token string, file io.Reader) (string, error) {
-	const LIMIT_FILESIZE = int64(bytesize.MB * 10)
+	const LIMIT_FILESIZE = bytesize.MB * 10
 	var ALLOWED_MIMES = []string{"jpeg", "jpg", "png", "jpeg"}
-	var MIME string
 	if file == nil {
 		return "", fmt.Errorf("cannot read the file")
 	}
@@ -80,35 +77,10 @@ func Service_profile_pic(token string, file io.Reader) (string, error) {
 	if nil == u {
 		return "", services.ERR_N_LOGIN
 	}
-	var magic = make([]byte, 512)
-	var filebuf = make([]byte, LIMIT_FILESIZE)
-	n, err := file.Read(magic)
+	__data_url, err := helpers.Multipart_to_data_url(file, LIMIT_FILESIZE, ALLOWED_MIMES)
 	if nil != err {
-		return "", fmt.Errorf("cannot read the file, error: %s", err.Error())
-	} else if n < 512 {
-		return "", fmt.Errorf("too small")
-	} else {
-		//else is just for scoping variables here
-		var valid_mime bool
-		MIME = http.DetectContentType(magic)
-		for i := range ALLOWED_MIMES {
-			if strings.Contains(MIME, ALLOWED_MIMES[i]) {
-				valid_mime = true
-				break
-			}
-		}
-		if !valid_mime {
-			return "", fmt.Errorf("invalid image type")
-		}
+		return "", fmt.Errorf("cannot process the file error : %s", err.Error())
 	}
-	n, err = file.Read(filebuf)
-	if nil != err {
-		return "", fmt.Errorf("cannot read the file, error: %s", err.Error())
-	} else if int64(n) > LIMIT_FILESIZE-512 {
-		//we already consumed the first 512 bytes so if the read amount is big file is bigger no matter what
-		return "", fmt.Errorf("too big")
-	}
-	var __data_url = "data:" + MIME + ";base64," + base64.StdEncoding.EncodeToString(append(magic, filebuf[:n]...))
 	__token := u.Token //update destroys the old token so lets save it
 	err = models.User_update(u.Id, map[string]interface{}{"profile_pic_url": __data_url}, u)
 	u.Token = __token

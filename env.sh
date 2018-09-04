@@ -1,6 +1,18 @@
 __api="http://localhost:8080"
 export tkn=""
 export last_result=""
+_register()
+{
+	ep="/api/user/register"
+	api=""
+	test $API_ADDR && api=$API_ADDR || api=$__api
+	last_result=`curl $api$ep -d "email=nikos@mugsoft.io" \
+		-d "password=test" \
+		-d "name=nikos" \
+		-d "lastname=efthias" \
+		-d "phone=0079600757769"`
+	echo $last_result
+}
 _login()
 {
 	ep="/api/user/login"
@@ -14,7 +26,7 @@ _login()
 	then
 		test -z $2 && pass="test" || pass=$2
 	fi
-	last_result=`curl $__api$ep -d "email=$mail&password=$pass"`
+	last_result=`curl $api$ep -d "email=$mail&password=$pass"`
 	tkn=`echo $last_result|jq '.data'| cut -d'"' -f2`
 	echo $last_result
 }
@@ -42,5 +54,24 @@ _pp()
 	_login &>/dev/null || {echo $last_result && return 1}
 	ep="/api/user/pp/$tkn"
 	last_result=`curl "$api$ep" -F "file=@$1"`
+	echo $last_result
+}
+_create_event()
+{
+	test -z $1 && echo missing filename && return 1
+	_login &>/dev/null || {echo $last_result && return 1}
+	ep="/api/event/create/$tkn"
+	dt=$(($(date +%s)+32000))
+	last_result=`curl $api$ep \
+		-F "image=@$1" \
+		-F "title=test_event" \
+		-F "location=here" \
+		-F "start_date=$dt" \
+		-F "end_date="$((dt+5000))\
+		-F "details=this is a test event" \
+		-F "max_num_guest=10" \
+		-F "min_num_guest=0" \
+		-F "cost=10.2" \
+		`
 	echo $last_result
 }

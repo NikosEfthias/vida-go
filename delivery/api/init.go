@@ -14,6 +14,7 @@ func Mount() http.Handler {
 	//__mux is the interface so it can be used for middlewares
 	var __mux http.Handler
 	mount__user(mux)
+	mount__event(mux)
 	__mux = __middleware_headers_set(mux)
 	return __mux
 }
