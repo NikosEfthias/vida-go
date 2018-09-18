@@ -75,3 +75,13 @@ _create_event()
 		`
 	echo $last_result
 }
+_invite_app()
+{
+	_login &>/dev/null || {echo $last_result && return 1}
+	_ep="$api/api/app/invite/$tkn"
+	echo $_ep
+	test -z $1 && mail_addr="nikos@mugsoft.io"||mail_addr=$1
+	echo sending invitations to $mail_addr
+	last_result=`curl $_ep -d "invitees=$mail_addr"`
+	echo $last_result
+}
