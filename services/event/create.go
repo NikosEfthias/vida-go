@@ -13,7 +13,7 @@ import (
 	"github.com/mugsoft/vida/services/storage"
 )
 
-func Service_create(token, title, loc, startdate, enddate, details, max_num_guest, min_num_guest, cost string, img io.Reader) (string, error) {
+func Service_create(token, title, loc, startdate, enddate, details, max_num_guest, min_num_guest, cost, votable string, img io.Reader) (string, error) {
 	const LIMIT_FILESIZE = bytesize.MB * 10
 	var ALLOWED_MIMES = []string{"jpeg", "jpg", "png", "jpeg"}
 	if img == nil {
@@ -23,7 +23,7 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 	if nil == u {
 		return "", services.ERR_N_LOGIN
 	}
-	err := helpers.Check_missing_fields([]string{"title", "location", "start_date", "end_date", "details", "max_num_guest", "min_num_guest", "cost"}, []string{
+	err := helpers.Check_missing_fields([]string{"title", "location", "start_date", "end_date", "details", "max_num_guest", "min_num_guest", "cost", "votable"}, []string{
 		title,
 		loc,
 		startdate,
@@ -32,6 +32,7 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 		max_num_guest,
 		min_num_guest,
 		cost,
+		votable,
 	})
 	if nil != err {
 		return "", err
@@ -60,6 +61,11 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 	if nil != err {
 		return "", fmt.Errorf("cannot read event photo error:%s", err.Error())
 	}
+	__b_votable, err := strconv.ParseBool(votable)
+	if nil != err {
+		return "", fmt.Errorf("votable is not a valid bool error:%s", err.Error())
+	}
+
 	err = models.Event_new(&models.Event{
 		Owner:     u.Id,
 		Title:     title,
@@ -69,6 +75,7 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 		MinGuest:  __i_min_num_guests,
 		Cost:      __f_cost,
 		Img:       __data_url,
+		Votable:   __b_votable,
 		StartDate: time.Unix(__i_start_date, 0),
 		EndDate:   time.Unix(__i_end_date, 0),
 	})

@@ -15,6 +15,8 @@ func Mount() http.Handler {
 	var __mux http.Handler
 	mount__user(mux)
 	mount__event(mux)
+	mount__app(mux)
+	//middleware mounting
 	__mux = __middleware_headers_set(mux)
 	return __mux
 }

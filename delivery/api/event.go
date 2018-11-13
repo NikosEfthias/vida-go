@@ -13,6 +13,7 @@ import (
 const PREFIX_EVENT = "/api/event"
 
 func mount__event(mux *httprouter.Router) {
+
 	mux.POST(PREFIX_EVENT+"/create/:token", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		if nil != __parse__multipart__form(w, r, int64(bytesize.MB*5)) {
 			return
@@ -32,8 +33,9 @@ func mount__event(mux *httprouter.Router) {
 			__fv(r, "max_num_guest"),
 			__fv(r, "min_num_guest"),
 			__fv(r, "cost"),
+			__fv(r, "votable"),
 			f)
 		__respond__from__service(msg, err, w, r)
-
 	})
+
 }
