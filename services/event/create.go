@@ -65,8 +65,7 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 	if nil != err {
 		return "", fmt.Errorf("votable is not a valid bool error:%s", err.Error())
 	}
-
-	err = models.Event_new(&models.Event{
+	event := &models.Event{
 		Owner:     u.Id,
 		Title:     title,
 		Loc:       loc,
@@ -78,7 +77,8 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 		Votable:   __b_votable,
 		StartDate: time.Unix(__i_start_date, 0),
 		EndDate:   time.Unix(__i_end_date, 0),
-	})
+	}
+	err = models.Event_new(event)
 	//TODO:  check  if dates are on the future
-	return "success", err
+	return event.Id, err
 }
