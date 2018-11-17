@@ -34,6 +34,7 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 		cost,
 		votable,
 	})
+	//{{{
 	if nil != err {
 		return "", err
 	}
@@ -65,6 +66,7 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 	if nil != err {
 		return "", fmt.Errorf("votable is not a valid bool error:%s", err.Error())
 	}
+	//}}}
 	event := &models.Event{
 		Owner:     u.Id,
 		Title:     title,
