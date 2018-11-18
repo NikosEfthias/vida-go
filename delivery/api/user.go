@@ -12,11 +12,11 @@ import (
 	//}}}
 )
 
-const PREFIX__USER = "/api/user"
+const PREFIX_USER = "/api/user"
 
-func mount__user(mux *httprouter.Router) {
+func mount_user(mux *httprouter.Router) {
 
-	mux.POST(PREFIX__USER+"/register",
+	mux.POST(PREFIX_USER+"/register",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			if nil != __parse__form(w, r) {
@@ -34,7 +34,7 @@ func mount__user(mux *httprouter.Router) {
 		//}}}
 	)
 
-	mux.POST(PREFIX__USER+"/login",
+	mux.POST(PREFIX_USER+"/login",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			if nil != __parse__form(w, r) {
@@ -49,7 +49,7 @@ func mount__user(mux *httprouter.Router) {
 		},
 	//}}}
 	)
-	mux.POST(PREFIX__USER+"/forgot",
+	mux.POST(PREFIX_USER+"/forgot",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			if nil != __parse__form(w, r) {
@@ -62,7 +62,7 @@ func mount__user(mux *httprouter.Router) {
 		},
 	//}}}
 	)
-	mux.GET(PREFIX__USER+"/:token",
+	mux.GET(PREFIX_USER+"/:token",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			msg, err := user.Service_get(p.ByName("token"))
@@ -71,7 +71,7 @@ func mount__user(mux *httprouter.Router) {
 	//}}}
 	)
 
-	mux.POST(PREFIX__USER+"/update/:token/:field",
+	mux.POST(PREFIX_USER+"/update/:token/:field",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			if nil != __parse__form(w, r) {
@@ -83,7 +83,7 @@ func mount__user(mux *httprouter.Router) {
 	//}}}
 	)
 
-	mux.POST(PREFIX__USER+"/pp/:token",
+	mux.POST(PREFIX_USER+"/pp/:token",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			if nil != __parse__multipart__form(w, r, int64(bytesize.MB*5)) {

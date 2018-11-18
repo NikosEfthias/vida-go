@@ -13,7 +13,7 @@ func Mount() http.Handler {
 	var mux = httprouter.New()
 	//__mux is the interface so it can be used for middlewares
 	var __mux http.Handler
-	mount__user(mux)
+	mount_user(mux)
 	mount__event(mux)
 	mount__app(mux)
 	//middleware mounting
