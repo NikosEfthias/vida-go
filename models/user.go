@@ -8,23 +8,24 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-const __COL_USER_STR = "users"
+const _COL_USER_STR = "users"
 
-var __col = db__get().C(__COL_USER_STR)
+var _col = db_get().C(_COL_USER_STR)
 
 type User struct {
-	Id             string    `bson:"id" json:"id"`
-	Name           string    `bson:"name" json:"name"`
-	Lastname       string    `bson:"lastname" json:"lastname"`
-	Phone          string    `bson:"phone" json:"phone"`
-	Email          string    `bson:"email" json:"email"`
-	Notification   int       `bson:"notification" json:"notification"`
-	FbAccountName  string    `json:"fb_account_name" bson:"fb_account_name"`
-	FbProfilePic   string    `json:"fb_profile_pic" bson:"fb_profile_pic"`
-	Password       string    `bson:"password" json:"-"`
-	Login__expires time.Time `bson:"-" json:"-"`
-	Token          string    `bson:"-" json:"token"`
-	ProfilePicURL  string    `bson:"profile_pic_url" json:"profile_pic_url"`
+	Id            string    `bson:"id" json:"id"`
+	Name          string    `bson:"name" json:"name"`
+	Lastname      string    `bson:"lastname" json:"lastname"`
+	Phone         string    `bson:"phone" json:"phone"`
+	Email         string    `bson:"email" json:"email"`
+	Notification  int       `bson:"notification" json:"notification"`
+	FbAccountName string    `json:"fb_account_name" bson:"fb_account_name"`
+	FbProfilePic  string    `json:"fb_profile_pic" bson:"fb_profile_pic"`
+	Password      string    `bson:"password" json:"-"`
+	Login_expires time.Time `bson:"-" json:"-"`
+	Token         string    `bson:"-" json:"token"`
+	ProfilePicURL string    `bson:"profile_pic_url" json:"profile_pic_url"`
+	PassReset     bool      `bson:"pass_reset" json:"pass_reset,omitempty"`
 	Defaults
 }
 
@@ -40,7 +41,7 @@ func User_new(u *User) error {
 	u.Password = Hash_password(u, u.Password)
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = time.Now()
-	return __col.Insert(u)
+	return _col.Insert(u)
 }
 
 //Hash_password hashes user password with salt and generates id if it is empty
@@ -62,19 +63,19 @@ func User_get(u *User) error {
 	if "" == u.Email && "" == u.Phone {
 		return fmt.Errorf("missing email and phone")
 	}
-	return __col.Find(bson.M{
+	return _col.Find(bson.M{
 		"$or": _q,
 	}).One(u)
 }
 
 func User_update(userid string, fields map[string]interface{}, updatedU *User) error {
-	var __fields_with_updated_at = map[string]interface{}{
+	var _fields_with_pdatedAt = map[string]interface{}{
 		"updated_at": time.Now(),
 	}
 	for k, v := range fields {
-		__fields_with_updated_at[k] = v
+		_fields_with_pdatedAt[k] = v
 	}
-	err := __col.Update(bson.M{"id": userid}, bson.M{"$set": __fields_with_updated_at})
+	err := _col.Update(bson.M{"id": userid}, bson.M{"$set": _fields_with_pdatedAt})
 	if nil != err {
 		return err
 	}

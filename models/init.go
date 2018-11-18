@@ -9,7 +9,7 @@ import (
 
 var db *mgo.Database
 
-func db__get() *mgo.Database {
+func db_get() *mgo.Database {
 	if nil != db {
 		return db
 	}

@@ -9,7 +9,7 @@ import (
 
 const __COL_EVENT_STR = "events"
 
-var __col_event = db__get().C(__COL_EVENT_STR)
+var __col_event = db_get().C(__COL_EVENT_STR)
 
 // type Type int
 //
