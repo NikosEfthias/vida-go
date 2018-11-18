@@ -31,6 +31,7 @@ type User struct {
 
 //User_new generates id and date fields of the user and hashes password then saves
 func User_new(u *User) error {
+	//{{{
 	if "" == u.Email && "" == u.Phone {
 		return fmt.Errorf("missing email and phone")
 	}
@@ -42,17 +43,21 @@ func User_new(u *User) error {
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = time.Now()
 	return _col.Insert(u)
+	//}}}
 }
 
 //Hash_password hashes user password with salt and generates id if it is empty
 func Hash_password(u *User, pass string) string {
+	//{{{
 	if "" == u.Id {
 		u.Id = helpers.Unique_id()
 	}
 	return helpers.MD5(u.Id + pass)
+	//}}}
 }
 
 func User_get(u *User) error {
+	//{{{
 	_q := []bson.M{}
 	if "" != u.Email {
 		_q = append(_q, bson.M{"email": u.Email})
@@ -66,9 +71,10 @@ func User_get(u *User) error {
 	return _col.Find(bson.M{
 		"$or": _q,
 	}).One(u)
+	//}}}
 }
-
 func User_update(userid string, fields map[string]interface{}, updatedU *User) error {
+	//{{{
 	var _fields_with_pdatedAt = map[string]interface{}{
 		"updated_at": time.Now(),
 	}
@@ -84,4 +90,5 @@ func User_update(userid string, fields map[string]interface{}, updatedU *User) e
 	}
 	updatedU.Id = userid
 	return User_get(updatedU)
+	//}}}
 }
