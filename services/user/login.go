@@ -1,14 +1,20 @@
 package user
 
 import (
+	//{{{
+	"bytes"
 	"fmt"
+	"text/template"
 
 	"github.com/mugsoft/vida/helpers"
 	"github.com/mugsoft/vida/models"
 	"github.com/mugsoft/vida/services/storage"
+	//}}}
 )
 
 func Service_login(email, phone, password string) (string, error) {
+	//{{{
+	//{{{
 	if ("" == email && "" == phone) || "" == password {
 		return "", fmt.Errorf("missing login fields")
 	}
@@ -23,7 +29,32 @@ func Service_login(email, phone, password string) (string, error) {
 	if u.Password != models.Hash_password(u, password) {
 		return "", fmt.Errorf("invalid password")
 	}
+	//}}}
 	u.Token = helpers.Unique_id()
 	storage.Add_or_update_user(u)
 	return u.Token, nil
+	//}}}
+}
+func Service_forgot_password(email string) (string, error) {
+	//{{{
+	u := &models.User{Email: email}
+	err := models.User_get(u)
+	if nil != err {
+		return "", fmt.Errorf("no such user")
+	}
+	u.Token = helpers.Unique_id()
+	u.PassReset = true
+	err = models.User_update(u.Id, map[string]interface{}{"pass_reset": true}, nil)
+	if nil != err {
+		return "", fmt.Errorf("cannot complete the request")
+	}
+	var mail = new(bytes.Buffer)
+	err = template.Must(template.New("mail").Parse("your token is {{.Token}}")).Execute(mail, u)
+	if nil != err {
+		return "", err
+	}
+	err = helpers.SendMailPreconfigured([]string{u.Email}, "Reset your password", mail.String())
+	storage.Add_or_update_user(u)
+	return "please check your email", err
+	//}}}
 }

@@ -1,6 +1,7 @@
 package user
 
 import (
+	//{{{
 	"fmt"
 	"io"
 	"strconv"
@@ -10,6 +11,7 @@ import (
 	"github.com/mugsoft/vida/models"
 	"github.com/mugsoft/vida/services"
 	"github.com/mugsoft/vida/services/storage"
+	//}}}
 )
 
 func Service_get(token string) (interface{}, error) {
@@ -25,6 +27,7 @@ func Service_get(token string) (interface{}, error) {
 	All three parameters passed at first as a string but then value can be reassigned with a different type internally and thats the reason its defined as an interface{}
 */
 func Service_update(key, token string, value interface{}) (string, error) {
+	//{{{
 	u := storage.Get_user_by_token(token)
 	if nil == u {
 		return "", services.ERR_N_LOGIN
@@ -34,6 +37,8 @@ func Service_update(key, token string, value interface{}) (string, error) {
 		return "", fmt.Errorf("empty value")
 	}
 	switch key {
+	//check update key
+	//{{{
 	case "name":
 	case "lastname":
 	case "email":
@@ -57,7 +62,12 @@ func Service_update(key, token string, value interface{}) (string, error) {
 	case "fb_profile_pic":
 	default:
 		return "", fmt.Errorf("unknown update field %s", key)
+		//}}}
 	}
+	if key != "password" && u.PassReset {
+		return "", fmt.Errorf("pass reset key cannot be used for anything other than password reset")
+	}
+	u.PassReset = false
 	err = models.User_update(u.Id, map[string]interface{}{key: value}, u)
 	u.Token = token
 	if nil != err {
@@ -65,9 +75,11 @@ func Service_update(key, token string, value interface{}) (string, error) {
 	}
 	storage.Extend_token(u)
 	return "success", nil
+	//}}}
 }
 
 func Service_profile_pic(token string, file io.Reader) (string, error) {
+	//{{{
 	const LIMIT_FILESIZE = bytesize.MB * 10
 	var ALLOWED_MIMES = []string{"jpeg", "jpg", "png", "jpeg"}
 	if file == nil {
@@ -89,4 +101,5 @@ func Service_profile_pic(token string, file io.Reader) (string, error) {
 	}
 	storage.Extend_token(u)
 	return "success", nil
+	//}}}
 }

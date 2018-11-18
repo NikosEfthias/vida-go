@@ -1,6 +1,7 @@
 package api
 
 import (
+	//{{{
 	"encoding/json"
 	"net/http"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/mugsoft/tools/bytesize"
 	"github.com/mugsoft/vida/helpers"
 	"github.com/mugsoft/vida/services/user"
+	//}}}
 )
 
 const PREFIX__USER = "/api/user"
@@ -15,6 +17,7 @@ const PREFIX__USER = "/api/user"
 func mount__user(mux *httprouter.Router) {
 
 	mux.POST(PREFIX__USER+"/register",
+		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			if nil != __parse__form(w, r) {
 				return
@@ -27,9 +30,12 @@ func mount__user(mux *httprouter.Router) {
 			password = __fv(r, "password")
 			msg, err := user.Service_register(name, lastname, email, phone, password)
 			__respond__from__service(msg, err, w, r)
-		})
+		},
+		//}}}
+	)
 
 	mux.POST(PREFIX__USER+"/login",
+		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			if nil != __parse__form(w, r) {
 				return
@@ -40,35 +46,59 @@ func mount__user(mux *httprouter.Router) {
 			password = __fv(r, "password")
 			msg, err := user.Service_login(email, phone, password)
 			__respond__from__service(msg, err, w, r)
-		})
-
+		},
+	//}}}
+	)
+	mux.POST(PREFIX__USER+"/forgot",
+		//{{{
+		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+			if nil != __parse__form(w, r) {
+				return
+			}
+			var email string
+			email = __fv(r, "email")
+			msg, err := user.Service_forgot_password(email)
+			__respond__from__service(msg, err, w, r)
+		},
+	//}}}
+	)
 	mux.GET(PREFIX__USER+"/:token",
+		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			msg, err := user.Service_get(p.ByName("token"))
 			__respond__from__service(msg, err, w, r)
-		})
+		},
+	//}}}
+	)
 
 	mux.POST(PREFIX__USER+"/update/:token/:field",
+		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			if nil != __parse__form(w, r) {
 				return
 			}
 			msg, err := user.Service_update(p.ByName("field"), p.ByName("token"), __fv(r, "value"))
 			__respond__from__service(msg, err, w, r)
-		})
+		},
+	//}}}
+	)
 
-	mux.POST(PREFIX__USER+"/pp/:token", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		if nil != __parse__multipart__form(w, r, int64(bytesize.MB*5)) {
-			return
-		}
-		f, _, err := r.FormFile("file")
-		if nil != err {
-			helpers.Log(helpers.ERR, err.Error())
-			json.NewEncoder(w).Encode(map[string]string{"error": "cannot parse file"})
-		}
-		defer f.Close()
-		msg, err := user.Service_profile_pic(p.ByName("token"), f)
-		__respond__from__service(msg, err, w, r)
-	})
+	mux.POST(PREFIX__USER+"/pp/:token",
+		//{{{
+		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+			if nil != __parse__multipart__form(w, r, int64(bytesize.MB*5)) {
+				return
+			}
+			f, _, err := r.FormFile("file")
+			if nil != err {
+				helpers.Log(helpers.ERR, err.Error())
+				json.NewEncoder(w).Encode(map[string]string{"error": "cannot parse file"})
+			}
+			defer f.Close()
+			msg, err := user.Service_profile_pic(p.ByName("token"), f)
+			__respond__from__service(msg, err, w, r)
+		},
+	//}}}
+	)
 
 }
