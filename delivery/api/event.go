@@ -6,8 +6,8 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/mugsoft/tools/bytesize"
-	"github.com/mugsoft/vida/helpers"
-	"github.com/mugsoft/vida/services/event"
+	"gitlab.mugsoft.io/vida/api/go-api/helpers"
+	"gitlab.mugsoft.io/vida/api/go-api/services/event"
 )
 
 const PREFIX_EVENT = "/api/event"

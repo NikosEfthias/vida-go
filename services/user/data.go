@@ -7,10 +7,10 @@ import (
 	"strconv"
 
 	"github.com/mugsoft/tools/bytesize"
-	"github.com/mugsoft/vida/helpers"
-	"github.com/mugsoft/vida/models"
-	"github.com/mugsoft/vida/services"
-	"github.com/mugsoft/vida/services/storage"
+	"gitlab.mugsoft.io/vida/api/go-api/helpers"
+	"gitlab.mugsoft.io/vida/api/go-api/models"
+	"gitlab.mugsoft.io/vida/api/go-api/services"
+	"gitlab.mugsoft.io/vida/api/go-api/services/storage"
 	//}}}
 )
 

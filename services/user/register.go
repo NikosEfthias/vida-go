@@ -3,7 +3,7 @@ package user
 import (
 	"fmt"
 
-	"github.com/mugsoft/vida/models"
+	"gitlab.mugsoft.io/vida/api/go-api/models"
 )
 
 func Service_register(name, lastname, email, phone, password string) (string, error) {

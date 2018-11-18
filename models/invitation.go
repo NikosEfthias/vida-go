@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mugsoft/vida/helpers"
+	"gitlab.mugsoft.io/vida/api/go-api/helpers"
 	//}}}
 )
 

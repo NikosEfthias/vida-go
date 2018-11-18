@@ -10,6 +10,14 @@
   version = "v1.1"
 
 [[projects]]
+  branch = "master"
+  digest = "1:4d89c89d2c226420c0fc62407ac117f1a75aa2fd6f4c4ac59cbe9eba00c22090"
+  name = "github.com/mugsoft/tools"
+  packages = ["bytesize"]
+  pruneopts = "UT"
+  revision = "9e69225e199bc04bc9f1774a4481fa0349e9bf94"
+
+[[projects]]
   branch = "v2"
   digest = "1:988de7520a09024d5d94cd99bd545afbf194893994ec759b1cda0a0bbb6adb80"
   name = "gopkg.in/mgo.v2"
@@ -28,7 +36,9 @@
   analyzer-version = 1
   input-imports = [
     "github.com/julienschmidt/httprouter",
+    "github.com/mugsoft/tools/bytesize",
     "gopkg.in/mgo.v2",
+    "gopkg.in/mgo.v2/bson",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

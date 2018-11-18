@@ -4,8 +4,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mugsoft/vida/helpers"
-	"github.com/mugsoft/vida/models"
+	"gitlab.mugsoft.io/vida/api/go-api/helpers"
+	"gitlab.mugsoft.io/vida/api/go-api/models"
 )
 
 var _cache_user = struct {

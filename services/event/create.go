@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/mugsoft/tools/bytesize"
-	"github.com/mugsoft/vida/helpers"
-	"github.com/mugsoft/vida/models"
-	"github.com/mugsoft/vida/services"
-	"github.com/mugsoft/vida/services/storage"
+	"gitlab.mugsoft.io/vida/api/go-api/helpers"
+	"gitlab.mugsoft.io/vida/api/go-api/models"
+	"gitlab.mugsoft.io/vida/api/go-api/services"
+	"gitlab.mugsoft.io/vida/api/go-api/services/storage"
 )
 
 func Service_create(token, title, loc, startdate, enddate, details, max_num_guest, min_num_guest, cost, votable string, img io.Reader) (string, error) {

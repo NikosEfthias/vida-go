@@ -1,8 +1,8 @@
 package user
 
 import (
-	"github.com/mugsoft/vida/services"
-	"github.com/mugsoft/vida/services/storage"
+	"gitlab.mugsoft.io/vida/api/go-api/services"
+	"gitlab.mugsoft.io/vida/api/go-api/services/storage"
 )
 
 func Service_logout(token string) (string, error) {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mugsoft/vida/helpers"
+	"gitlab.mugsoft.io/vida/api/go-api/helpers"
 )
 
 const __COL_EVENT_STR = "events"

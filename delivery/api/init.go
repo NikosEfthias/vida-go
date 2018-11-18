@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/mugsoft/vida/helpers"
+	"gitlab.mugsoft.io/vida/api/go-api/helpers"
 )
 
 //Mount root handler
@@ -27,8 +27,9 @@ func __fv(r *http.Request, field__name string) string {
 
 func __middleware_headers_set(next http.Handler) http.Handler {
 	__hdrs := map[string]string{
-		"Content-Type":                "application/json",
-		"Access-Control-Allow-Origin": "*",
+		"Content-Type":                 "application/json",
+		"Access-Control-Allow-Origin":  "*",
+		"Access-Control-Allow-Headers": "GET, POST, PUT, PATCH, DELETE",
 	}
 
 	fn := func(w http.ResponseWriter, r *http.Request) {

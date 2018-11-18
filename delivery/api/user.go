@@ -7,8 +7,8 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/mugsoft/tools/bytesize"
-	"github.com/mugsoft/vida/helpers"
-	"github.com/mugsoft/vida/services/user"
+	"gitlab.mugsoft.io/vida/api/go-api/helpers"
+	"gitlab.mugsoft.io/vida/api/go-api/services/user"
 	//}}}
 )
 
@@ -100,7 +100,7 @@ func mount_user(mux *httprouter.Router) {
 		},
 	//}}}
 	)
-	mux.GET(PREFIX_USER+"/logout/:token",
+	mux.DELETE(PREFIX_USER+"/logout/:token",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			msg, err := user.Service_logout(p.ByName("token"))
