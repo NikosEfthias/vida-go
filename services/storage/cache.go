@@ -21,18 +21,23 @@ var _cache_user = struct {
 }
 
 func Get_user_by_id(k string) *models.User {
+	//{{{
 	_cache_user.Lock()
 	defer _cache_user.Unlock()
 	return _is_expired(_cache_user.by_id[k])
+	//}}}
 }
 
 func Get_user_by_token(k string) *models.User {
+	//{{{
 	_cache_user.Lock()
 	defer _cache_user.Unlock()
 	return _is_expired(_cache_user.by_token[k])
+	//}}}
 }
 
 func Add_or_update_user(u *models.User) {
+	//{{{
 	if u.Token == "" {
 		helpers.Log(helpers.ERR, "missing token in add or update for cache")
 		return
@@ -48,9 +53,11 @@ func Add_or_update_user(u *models.User) {
 		delete(_cache_user.by_token, old_u.Token)
 	}
 	_cache_user.by_token[u.Token] = u
+	//}}}
 }
 
 func _is_expired(u *models.User) *models.User {
+	//{{{
 	if nil == u {
 		return u
 	}
@@ -59,13 +66,27 @@ func _is_expired(u *models.User) *models.User {
 	}
 	u.Login_expires = time.Now().Add(time.Hour * 4)
 	return u
+	//}}}
 }
 
 func Extend_token(u *models.User) {
+	//{{{
 	if nil == u {
 		return
 	}
 	u.Login_expires = time.Now().Add(time.Hour * 4)
+	//}}}
+}
+func Remove_user_by_token(token string) {
+	//{{{
+	_cache_user.Lock()
+	u, ok := _cache_user.by_token[token]
+	delete(_cache_user.by_token, token)
+	if ok {
+		delete(_cache_user.by_id, u.Id)
+	}
+	_cache_user.Unlock()
+	//}}}
 }
 
 //TODO:  add setter so data can be locked

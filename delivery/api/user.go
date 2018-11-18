@@ -100,5 +100,13 @@ func mount_user(mux *httprouter.Router) {
 		},
 	//}}}
 	)
+	mux.GET(PREFIX_USER+"/logout/:token",
+		//{{{
+		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+			msg, err := user.Service_logout(p.ByName("token"))
+			__respond__from__service(msg, err, w, r)
+		},
+	//}}}
+	)
 
 }
