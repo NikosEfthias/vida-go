@@ -13,6 +13,7 @@ const _COL_USER_STR = "users"
 var _col = db_get().C(_COL_USER_STR)
 
 type User struct {
+	//{{{
 	Id            string    `bson:"id" json:"id"`
 	Name          string    `bson:"name" json:"name"`
 	Lastname      string    `bson:"lastname" json:"lastname"`
@@ -26,18 +27,21 @@ type User struct {
 	Token         string    `bson:"-" json:"token"`
 	ProfilePicURL string    `bson:"profile_pic_url" json:"profile_pic_url"`
 	PassReset     bool      `bson:"pass_reset" json:"pass_reset,omitempty"`
+	Tmp           bool      `json:"tmp,omitempty" bson:"-"`
 	Defaults
+	//}}}
 }
 
 //User_new generates id and date fields of the user and hashes password then saves
 func User_new(u *User) error {
 	//{{{
+	//{{{ error checks
 	if "" == u.Email && "" == u.Phone {
 		return fmt.Errorf("missing email and phone")
 	}
 	if nil == User_get(u) {
 		return fmt.Errorf("user exists")
-	}
+	} //}}}
 	u.Id = helpers.Unique_id()
 	u.Password = Hash_password(u, u.Password)
 	u.CreatedAt = time.Now()
@@ -91,4 +95,18 @@ func User_update(userid string, fields map[string]interface{}, updatedU *User) e
 	updatedU.Id = userid
 	return User_get(updatedU)
 	//}}}
+}
+func User_new_tmp(email string) (*User, error) {
+	//{{{
+	u := &User{
+		Email: email,
+	}
+	//{{{ error checks
+	if nil == User_get(u) {
+		return nil, fmt.Errorf("user exists")
+	} //}}}
+	u.Id = helpers.Unique_id()
+	u.Token = helpers.Unique_id()
+	u.Tmp = true
+	return nil, nil //}}}
 }
