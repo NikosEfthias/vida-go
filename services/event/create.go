@@ -1,6 +1,7 @@
 package event
 
 import (
+	//{{{
 	"fmt"
 	"io"
 	"strconv"
@@ -11,9 +12,11 @@ import (
 	"gitlab.mugsoft.io/vida/api/go-api/models"
 	"gitlab.mugsoft.io/vida/api/go-api/services"
 	"gitlab.mugsoft.io/vida/api/go-api/services/storage"
+	//}}}
 )
 
 func Service_create(token, title, loc, startdate, enddate, details, max_num_guest, min_num_guest, cost, votable string, img io.Reader) (string, error) {
+	//{{{
 	const LIMIT_FILESIZE = bytesize.MB * 10
 	var ALLOWED_MIMES = []string{"jpeg", "jpg", "png", "jpeg"}
 	if img == nil {
@@ -23,18 +26,10 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 	if nil == u {
 		return "", services.ERR_N_LOGIN
 	}
-	err := helpers.Check_missing_fields([]string{"title", "location", "start_date", "end_date", "details", "max_num_guest", "min_num_guest", "cost", "votable"}, []string{
-		title,
-		loc,
-		startdate,
-		enddate,
-		details,
-		max_num_guest,
-		min_num_guest,
-		cost,
-		votable,
-	})
-	//{{{
+	err := helpers.Check_missing_fields(
+		[]string{"title", "location", "start_date", "end_date", "details", "max_num_guest", "min_num_guest", "cost", "votable"},
+		[]string{title, loc, startdate, enddate, details, max_num_guest, min_num_guest, cost, votable})
+	// err checks{{{
 	if nil != err {
 		return "", err
 	}
@@ -82,5 +77,5 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 	}
 	err = models.Event_new(event)
 	//TODO:  check  if dates are on the future
-	return event.Id, err
+	return event.Id, err //}}}
 }
