@@ -31,3 +31,8 @@ func SendMailPreconfigured(to []string, subject, msg string) error {
 		//}}}
 	)
 }
+func SendOneMailPreconfigured(to string, subject, msg string) error {
+	//{{{
+	return SendMailPreconfigured([]string{to}, subject, msg)
+	//}}}
+}
