@@ -2,7 +2,7 @@ __api="http://localhost:8080"
 export tkn=""
 export last_result=""
 _register()
-{
+{ #{{{
 	ep="/api/user/register"
 	api=""
 	test $API_ADDR && api=$API_ADDR || api=$__api
@@ -12,9 +12,9 @@ _register()
 		-d "lastname=efthias" \
 		-d "phone=0079600757769"`
 	echo $last_result
-}
+} #}}}
 _login()
-{
+{ #{{{
 	ep="/api/user/login"
 	api=""
 	test $API_ADDR && api=$API_ADDR || api=$__api
@@ -29,35 +29,35 @@ _login()
 	last_result=`curl $api$ep -d "email=$mail&password=$pass"`
 	tkn=`echo $last_result|jq '.data'| cut -d'"' -f2`
 	echo $last_result
-}
+} #}}}
 
 _get()
-{
+{ #{{{
 	_login &>/dev/null || (echo $last_result && exit 1) 
 	ep="$api/api/user/$tkn"
 	last_result=`curl $ep`
 	echo $last_result
-}
+} #}}}
 
 _update()
-{
+{ #{{{
 	test -z $1 && echo missing field && exit 1
 	test -z $2 && echo missing value && exit 1
 	_login &>/dev/null || (echo $last_result && exit 1 )
 	ep="$api/api/user/update/$tkn/$1"
 	last_result=`curl $ep -d "value=$2"`
 	echo $last_result
-}
+} #}}}
 _pp()
-{
+{ #{{{
 	test -z $1 && echo missing filename && exit 1
 	_login &>/dev/null || (echo $last_result && exit 1 )
 	ep="/api/user/pp/$tkn"
 	last_result=`curl "$api$ep" -F "file=@$1"`
 	echo $last_result
-}
+} #}}}
 _create_event()
-{
+{ #{{{
 	test -z $1 && echo missing filename && exit 1
 	_login &>/dev/null || (echo $last_result && exit 1 )
 	ep="/api/event/create/$tkn"
@@ -74,9 +74,9 @@ _create_event()
 		-F "cost=10.2" \
 		`
 	echo $last_result
-}
+} #}}}
 _invite_app()
-{
+{ #{{{
 	_login &>/dev/null || (echo $last_result && exit 1 )
 	_ep="$api/api/app/invite/$tkn"
 	echo $_ep
@@ -84,4 +84,4 @@ _invite_app()
 	echo sending invitations to $mail_addr
 	last_result=`curl $_ep -d "invitees=$mail_addr"`
 	echo $last_result
-}
+} #}}}
