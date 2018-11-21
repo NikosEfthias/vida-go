@@ -17,6 +17,7 @@ import (
 
 func Service_create(token, title, loc, startdate, enddate, details, max_num_guest, min_num_guest, cost, votable string, img io.Reader) (string, error) {
 	//{{{
+	// err checks{{{
 	const LIMIT_FILESIZE = bytesize.MB * 10
 	var ALLOWED_MIMES = []string{"jpeg", "jpg", "png", "jpeg"}
 	if img == nil {
@@ -29,7 +30,6 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 	err := helpers.Check_missing_fields(
 		[]string{"title", "location", "start_date", "end_date", "details", "max_num_guest", "min_num_guest", "cost", "votable"},
 		[]string{title, loc, startdate, enddate, details, max_num_guest, min_num_guest, cost, votable})
-	// err checks{{{
 	if nil != err {
 		return "", err
 	}
@@ -78,4 +78,38 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 	err = models.Event_new(event)
 	//TODO:  check  if dates are on the future
 	return event.Id, err //}}}
+}
+func Service_delete(token, id string) (string, error) {
+	//{{{
+	u := storage.Get_user_by_token(token)
+	if nil == u {
+		return "", services.ERR_N_LOGIN
+	}
+	return "", fmt.Errorf("not implemented yet")
+	//}}}
+}
+
+func Service_get_by_id(token string, qid string, filter_options interface{}) (interface{}, error) {
+	//{{{
+	u := storage.Get_user_by_token(token)
+	if nil == u {
+		return "", services.ERR_N_LOGIN
+	}
+	return nil, fmt.Errorf("not implemented") //}}}
+}
+func Service_get_by_owner(token, start, end string, filter_options interface{}) (interface{}, error) {
+	//{{{
+	u := storage.Get_user_by_token(token)
+	if nil == u {
+		return "", services.ERR_N_LOGIN
+	}
+	return nil, fmt.Errorf("not implemented") //}}}
+}
+func Service_get_by_participant(token, start, end string, filter_options interface{}) (interface{}, error) {
+	//{{{
+	u := storage.Get_user_by_token(token)
+	if nil == u {
+		return "", services.ERR_N_LOGIN
+	}
+	return nil, fmt.Errorf("not implemented") //}}}
 }
