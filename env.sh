@@ -33,7 +33,7 @@ _login()
 
 _get()
 {
-	_login &>/dev/null || {echo $last_result && return 1}
+	_login &>/dev/null || (echo $last_result && exit 1) 
 	ep="$api/api/user/$tkn"
 	last_result=`curl $ep`
 	echo $last_result
@@ -41,25 +41,25 @@ _get()
 
 _update()
 {
-	test -z $1 && echo missing field && return 1
-	test -z $2 && echo missing value && return 1
-	_login &>/dev/null || {echo $last_result && return 1}
+	test -z $1 && echo missing field && exit 1
+	test -z $2 && echo missing value && exit 1
+	_login &>/dev/null || (echo $last_result && exit 1 )
 	ep="$api/api/user/update/$tkn/$1"
 	last_result=`curl $ep -d "value=$2"`
 	echo $last_result
 }
 _pp()
 {
-	test -z $1 && echo missing filename && return 1
-	_login &>/dev/null || {echo $last_result && return 1}
+	test -z $1 && echo missing filename && exit 1
+	_login &>/dev/null || (echo $last_result && exit 1 )
 	ep="/api/user/pp/$tkn"
 	last_result=`curl "$api$ep" -F "file=@$1"`
 	echo $last_result
 }
 _create_event()
 {
-	test -z $1 && echo missing filename && return 1
-	_login &>/dev/null || {echo $last_result && return 1}
+	test -z $1 && echo missing filename && exit 1
+	_login &>/dev/null || (echo $last_result && exit 1 )
 	ep="/api/event/create/$tkn"
 	dt=$(($(date +%s)+32000))
 	last_result=`curl $api$ep \
@@ -77,7 +77,7 @@ _create_event()
 }
 _invite_app()
 {
-	_login &>/dev/null || {echo $last_result && return 1}
+	_login &>/dev/null || (echo $last_result && exit 1 )
 	_ep="$api/api/app/invite/$tkn"
 	echo $_ep
 	test -z $1 && mail_addr="nikos@mugsoft.io"||mail_addr=$1
