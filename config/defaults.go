@@ -12,6 +12,7 @@ var conf = map[string]string{
 	"APP_EMAIL_ADDR":   "info@vidaevents.org",
 	"SMTP_ADDR":        "smtp.gmail.com:587",
 	"APP_EMAIL_PASSWD": "<secret>",
+	"APP_BASE_URL":     "https://devo.vidavidavida.com",
 }
 
 func init() {
