@@ -38,6 +38,10 @@ func Get_user_by_token(k string) *models.User {
 
 func Add_or_update_user(u *models.User) {
 	//{{{
+	if nil == u {
+		helpers.Log(helpers.ERR, "null pointer passed into add or update")
+		return
+	}
 	if u.Token == "" {
 		helpers.Log(helpers.ERR, "missing token in add or update for cache")
 		return
