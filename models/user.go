@@ -108,5 +108,5 @@ func User_new_tmp(email string) (*User, error) {
 	u.Id = helpers.Unique_id()
 	u.Token = helpers.Unique_id()
 	u.Tmp = true
-	return nil, nil //}}}
+	return u, nil //}}}
 }

@@ -34,7 +34,7 @@ func Service_invite_people(token string, people []string) (string, error) {
 		}
 		if nil == usr {
 			helpers.Log(helpers.ERR, "weird null usr behaviour must be checked")
-			errs = append(errs, fmt.Errorf("weird null pointer check this"))
+			errs = append(errs, "weird null pointer check this")
 			continue
 		}
 		storage.Add_or_update_user(usr)
