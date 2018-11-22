@@ -19,7 +19,7 @@ func Check_missing_fields(names, values []string) error {
 	return nil //}}}
 }
 
-//Check_id_format checks the id format retreived from user
+//Check_id_format checks the id format retrieved from user
 func Check_id_format(id string) error {
 	//{{{
 	matched, err := regexp.MatchString("^[a-zA-Z0-9]{32}$", id)
@@ -31,4 +31,24 @@ func Check_id_format(id string) error {
 		return fmt.Errorf("invalid id format")
 	}
 	return nil //}}}
+}
+
+//Can_user_see_event decides whether the user can see the event
+func Can_user_see_event(id string, event_participants []string, event_owner_id string) bool {
+	//{{{
+	if id == event_owner_id || Index_of_str(event_participants, id) > -1 {
+		return true
+	}
+	return false
+	//}}}
+}
+
+func Index_of_str(s []string, v string) int {
+	//{{{
+	for i, vv := range s {
+		if vv == v {
+			return i
+		}
+	}
+	return -1 //}}}
 }

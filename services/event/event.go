@@ -103,7 +103,14 @@ func Service_get_by_id(token string, qid string, filter_options interface{}) (in
 	if nil == u {
 		return "", services.ERR_N_LOGIN
 	}
-	return nil, fmt.Errorf("not implemented") //}}}
+	e, err := models.Event_get_by_id(qid)
+	if nil != err {
+		return nil, err
+	}
+	if !helpers.Can_user_see_event(u.Id, e.Guests, e.Owner) {
+		return nil, fmt.Errorf("only the event owner and the guest can see the event details")
+	}
+	return e, nil //}}}
 }
 func Service_get_by_owner(token, start, end string, filter_options interface{}) (interface{}, error) {
 	//{{{

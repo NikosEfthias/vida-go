@@ -59,7 +59,7 @@ _invite_app()
 { #{{{
 	_login &>/dev/null || (echo $last_result && return 1 )
 	_ep="$api/api/app/invite/$tkn"
-	echo $_ep
+	echo $_ep 1>&2
 	test -z $1 && mail_addr="nikos@mugsoft.io"||mail_addr=$1
 	echo sending invitations to $mail_addr
 	last_result=`curl $_ep -d "invitees=$mail_addr" 2>/dev/null`
@@ -85,20 +85,33 @@ _event_create()
 		2>/dev/null`
 	echo $last_result
 } #}}}
-_event_delete() #incomplete
+_event_delete()
 { #{{{
-	_event_create $1 &>/dev/null || return 1;
-	id=`echo $last_result | jq '.data' | xargs echo`
+	if [ -z $2 ]
+	then
+		_event_create $1 &>/dev/null || return 1;
+		id=`echo $last_result | jq '.data' | xargs echo`
+	else
+		_login &>/dev/null || (echo $last_result && return 1 )
+		id=$2
+	fi
 	_ep="$api/api/event/delete/$id/$tkn"
-	echo $_ep
+	echo $_ep 1>&2
 	last_result=`curl $_ep 2>/dev/null`
 	echo $last_result
 } #}}}
-_event_get_by_owner() #incomplete
+_event_get_by_id() 
 { #{{{
-	_login &>/dev/null || (echo $last_result && return 1 )
-	_ep="$api/api/event/get/0/$tkn"
-	echo $_ep
-	last_result=`curl $_ep -d "invitees=$mail_addr"`
+	if [ -z $2 ]
+	then
+		_event_create $1 &>/dev/null || return 1;
+		id=`echo $last_result | jq '.data' | xargs echo`
+	else
+		_login &>/dev/null || (echo $last_result && return 1 )
+		id=$2
+	fi
+	_ep="$api/api/event/byid/$id/$tkn"
+	echo $_ep 1>&2
+	last_result=`curl $_ep 2>/dev/null`
 	echo $last_result
 } #}}}
