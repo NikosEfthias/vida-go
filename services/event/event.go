@@ -85,7 +85,15 @@ func Service_delete(token, id string) (string, error) {
 	if nil == u {
 		return "", services.ERR_N_LOGIN
 	}
-	return "", fmt.Errorf("not implemented yet")
+	event, err := models.Event_get_by_id(id)
+	if nil != err {
+		return "", err
+	}
+	if event.Owner != u.Id {
+		return "", fmt.Errorf("event can only be deleted by its owner")
+	}
+
+	return event.Id, models.Event_delete(event.Id)
 	//}}}
 }
 
