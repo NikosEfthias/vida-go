@@ -2,8 +2,11 @@ package app
 
 import (
 	//{{{
+	"bytes"
 	"fmt"
+	"html/template"
 
+	"gitlab.mugsoft.io/vida/api/go-api/config"
 	"gitlab.mugsoft.io/vida/api/go-api/helpers"
 	"gitlab.mugsoft.io/vida/api/go-api/models"
 	"gitlab.mugsoft.io/vida/api/go-api/services"
@@ -40,7 +43,15 @@ func Service_invite_people(token string, people []string) (string, error) {
 		storage.Add_or_update_user(usr)
 		//}}}
 		//add a new invitation to the db {{{
-		inv, err := models.Invitation_create(models.INV_APP, nil, u.Id, usr.Id, "PLEASE JOIN THE AWESOME VIDA "+usr.Token)
+		var buf = new(bytes.Buffer)
+		err = template.Must(template.New("mail").Parse(config.Get("APP_INVITATION_TEMPLATE"))).Execute(buf,
+			map[string]string{"Name": u.Name, "Link": config.Get("APP_BASE_URL") + "/#/?token=" + usr.Token})
+		if nil != err {
+			helpers.Log(helpers.ERR, "Cannot send app invitation to ", p, "err:", err)
+			errs = append(errs, err.Error())
+			continue
+		}
+		inv, err := models.Invitation_create(models.INV_APP, nil, u.Id, usr.Id, buf.String())
 		if nil != err {
 			helpers.Log(helpers.ERR, "Cannot send app invitation to ", p, "err:", err.Error())
 			errs = append(errs, err.Error())
