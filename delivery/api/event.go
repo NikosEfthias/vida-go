@@ -52,16 +52,16 @@ func mount__event(mux *httprouter.Router) {
 			__respond__from__service(msg, err, w, r)
 
 		}) //}}}
-	mux.GET(PREFIX_EVENT+"/byowner/:token/:start/:end",
+	mux.GET(PREFIX_EVENT+"/byowner/:token/:page",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-			msg, err := event.Service_get_by_owner(p.ByName("token"), p.ByName("start"), p.ByName("end"), nil)
+			msg, err := event.Service_get_by_owner(p.ByName("token"), p.ByName("page"), nil)
 			__respond__from__service(msg, err, w, r)
 		}) //}}}
-	mux.GET(PREFIX_EVENT+"/byparticipant/:token/:start/:end",
+	mux.GET(PREFIX_EVENT+"/byparticipant/:token/:page",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-			msg, err := event.Service_get_by_participant(p.ByName("token"), p.ByName("start"), p.ByName("end"), nil)
+			msg, err := event.Service_get_by_participant(p.ByName("token"), p.ByName("page"), nil)
 			__respond__from__service(msg, err, w, r)
 		}) //}}}
 }
