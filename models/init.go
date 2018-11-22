@@ -9,6 +9,8 @@ import (
 
 var db *mgo.Database
 
+const DATA_PER_PAGE = 10
+
 func db_get() *mgo.Database {
 	if nil != db {
 		return db
