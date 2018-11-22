@@ -50,9 +50,11 @@ func Event_delete(id string) error {
 	return _col_event.Remove(map[string]string{"id": id})
 	//}}}
 }
-func Event_get_by_owner(owner_id string) {
+func Event_get_by_owner(owner_id string, page int) ([]*Event, error) {
 	//{{{
-
+	events := []*Event{}
+	err := _col_event.Find(map[string]string{"owner": owner_id}).Skip(page).Limit(DATA_PER_PAGE).All(&events)
+	return events, err
 	//}}}
 }
 
@@ -68,8 +70,10 @@ func Event_get_by_id(id string) (*Event, error) {
 	//}}}
 }
 
-func Event_get_by_guest(guest_id string) {
+func Event_get_by_guest(guest_id string, page int) ([]*Event, error) {
 	//{{{
-
+	events := []*Event{}
+	err := _col_event.Find(map[string]string{"guests": guest_id}).Skip(page).Limit(DATA_PER_PAGE).All(&events)
+	return events, err
 	//}}}
 }

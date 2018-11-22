@@ -112,19 +112,29 @@ func Service_get_by_id(token string, qid string, filter_options interface{}) (in
 	}
 	return e, nil //}}}
 }
-func Service_get_by_owner(token, start, end string, filter_options interface{}) (interface{}, error) {
+func Service_get_by_owner(token, page string, filter_options interface{}) (interface{}, error) {
 	//{{{
+	//err checks{{{
 	u := storage.Get_user_by_token(token)
 	if nil == u {
 		return "", services.ERR_N_LOGIN
 	}
-	return nil, fmt.Errorf("not implemented") //}}}
+	_i_page, err := strconv.Atoi(page)
+	if nil != err {
+		return "", fmt.Errorf("page is not a valid integer err:%s", err.Error())
+	} //}}}
+	return models.Event_get_by_owner(u.Id, _i_page) //}}}
 }
-func Service_get_by_participant(token, start, end string, filter_options interface{}) (interface{}, error) {
+func Service_get_by_participant(token, page string, filter_options interface{}) (interface{}, error) {
 	//{{{
+	//err checks {{{
 	u := storage.Get_user_by_token(token)
 	if nil == u {
 		return "", services.ERR_N_LOGIN
 	}
-	return nil, fmt.Errorf("not implemented") //}}}
+	_i_page, err := strconv.Atoi(page)
+	if nil != err {
+		return "", fmt.Errorf("page is not a valid integer err:%s", err.Error())
+	} //}}}
+	return models.Event_get_by_guest(u.Id, _i_page) //}}}
 }
