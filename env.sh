@@ -115,3 +115,16 @@ _event_get_by_id()
 	last_result=`curl $_ep 2>/dev/null`
 	echo $last_result
 } #}}}
+_event_get_by_owner() 
+{	#{{{
+	_login &>/dev/null || (echo $last_result && return 1 )
+	_ep="$api/api/event/byowner/$tkn/0"
+	last_result=`curl $_ep 2>/dev/null`
+} #}}}
+_event_get_by_participant() 
+{	#{{{
+	_login &>/dev/null || (echo $last_result && return 1 )
+	_ep="$api/api/event/byparticipant/$tkn/0"
+	last_result=`curl $_ep 2>/dev/null`
+} #}}}
+
