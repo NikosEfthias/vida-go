@@ -77,6 +77,21 @@ func User_get(u *User) error {
 	}).One(u)
 	//}}}
 }
+func User_get_by_email(email string) (*User, error) {
+	//{{{
+	if !helpers.Is_email_valid(email) {
+		return nil, fmt.Errorf("invalid email address")
+	}
+	usr := &User{
+		Email: email,
+	}
+	err := User_get(usr)
+	if nil != err {
+		return nil, err
+	}
+	return usr, nil
+	//}}}
+}
 func User_update(userid string, fields map[string]interface{}, updatedU *User) error {
 	//{{{
 	var _fields_with_pdatedAt = map[string]interface{}{
