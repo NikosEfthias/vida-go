@@ -23,6 +23,7 @@ func mount__event(mux *httprouter.Router) {
 			if nil != err {
 				helpers.Log(helpers.ERR, err.Error())
 				json.NewEncoder(w).Encode(map[string]string{"error": "cannot parse image"})
+				return
 			}
 			defer f.Close()
 			msg, err := event.Service_create(p.ByName("token"),
@@ -62,6 +63,12 @@ func mount__event(mux *httprouter.Router) {
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			msg, err := event.Service_get_by_participant(p.ByName("token"), p.ByName("page"), nil)
+			__respond__from__service(msg, err, w, r)
+		}) //}}}
+	mux.POST(PREFIX_EVENT+"/invite/:event_id/:token",
+		//{{{
+		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+			msg, err := event.Service_event_invite(p.ByName("token"), p.ByName("event_id"), __fv(r, "invitees"))
 			__respond__from__service(msg, err, w, r)
 		}) //}}}
 }
