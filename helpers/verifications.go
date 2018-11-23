@@ -43,6 +43,7 @@ func Can_user_see_event(id string, event_participants []string, event_owner_id s
 	//}}}
 }
 
+//Index_of_str find index of a string inside a string slice and returns the position of the first occurance otherwise returns -1
 func Index_of_str(s []string, v string) int {
 	//{{{
 	for i, vv := range s {
@@ -51,4 +52,13 @@ func Index_of_str(s []string, v string) int {
 		}
 	}
 	return -1 //}}}
+}
+
+//Is_email_valid check whether is an email valid or not
+func Is_email_valid(email string) bool {
+	//{{{
+	reg_str := "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+	re := regexp.MustCompile(reg_str)
+	return re.MatchString(email)
+	//}}}
 }
