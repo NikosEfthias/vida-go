@@ -113,6 +113,9 @@ func User_update(userid string, fields map[string]interface{}, updatedU *User) e
 }
 func User_new_tmp(email string) (*User, error) {
 	//{{{
+	if !helpers.Is_email_valid(email) {
+		return nil, fmt.Errorf("invalid email address")
+	}
 	u := &User{
 		Email: email,
 	}
@@ -120,6 +123,24 @@ func User_new_tmp(email string) (*User, error) {
 	if nil == User_get(u) {
 		return nil, fmt.Errorf("user exists")
 	} //}}}
+	u.Id = helpers.Unique_id()
+	u.Token = helpers.Unique_id()
+	u.Tmp = true
+	return u, nil //}}}
+}
+
+//User_or_tmp returns the given user by email or creates and returns a tmp user
+func User_or_tmp(email string) (*User, error) {
+	//{{{
+	if !helpers.Is_email_valid(email) {
+		return nil, fmt.Errorf("invalid email address")
+	}
+	u := &User{
+		Email: email,
+	}
+	if nil == User_get(u) {
+		return u, nil
+	}
 	u.Id = helpers.Unique_id()
 	u.Token = helpers.Unique_id()
 	u.Tmp = true
