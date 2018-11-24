@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
@@ -75,7 +76,13 @@ func __respond__from__service(msg interface{}, err error, w http.ResponseWriter,
 		})
 		return
 	}
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	err = json.NewEncoder(w).Encode(map[string]interface{}{
 		"data": msg,
 	})
+	if nil != err {
+		helpers.Log(helpers.ERR, err.Error())
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": fmt.Sprintf("system error err: %v", err.Error()),
+		})
+	}
 }
