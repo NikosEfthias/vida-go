@@ -68,7 +68,7 @@ func Service_update(key, token string, value interface{}) (string, error) {
 		return "", fmt.Errorf("pass reset key cannot be used for anything other than password reset")
 	}
 	u.PassReset = false
-	err = models.User_update(u.Id, map[string]interface{}{key: value}, u)
+	err = models.User_update(u.Id, map[string]interface{}{key: value, "pass_reset": false}, u)
 	u.Token = token
 	if nil != err {
 		return "", fmt.Errorf("err updating the user: %s", err.Error())
