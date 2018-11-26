@@ -10,7 +10,7 @@ import (
 
 const _COL_USER_STR = "users"
 
-var _col = db_get().C(_COL_USER_STR)
+var _col_user = db_get().C(_COL_USER_STR)
 
 type User struct {
 	//{{{
@@ -46,7 +46,7 @@ func User_new(u *User) error {
 	u.Password = Hash_password(u, u.Password)
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = time.Now()
-	return _col.Insert(u)
+	return _col_user.Insert(u)
 	//}}}
 }
 
@@ -72,7 +72,7 @@ func User_get(u *User) error {
 	if "" == u.Email && "" == u.Phone {
 		return fmt.Errorf("missing email and phone")
 	}
-	return _col.Find(bson.M{
+	return _col_user.Find(bson.M{
 		"$or": _q,
 	}).One(u)
 	//}}}
@@ -100,7 +100,7 @@ func User_update(userid string, fields map[string]interface{}, updatedU *User) e
 	for k, v := range fields {
 		_fields_with_pdatedAt[k] = v
 	}
-	err := _col.Update(bson.M{"id": userid}, bson.M{"$set": _fields_with_pdatedAt})
+	err := _col_user.Update(bson.M{"id": userid}, bson.M{"$set": _fields_with_pdatedAt})
 	if nil != err {
 		return err
 	}
