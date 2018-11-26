@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"text/template"
 
+	"gitlab.mugsoft.io/vida/api/go-api/config"
 	"gitlab.mugsoft.io/vida/api/go-api/helpers"
 	"gitlab.mugsoft.io/vida/api/go-api/models"
 	"gitlab.mugsoft.io/vida/api/go-api/services/storage"
@@ -49,7 +50,10 @@ func Service_forgot_password(email string) (string, error) {
 		return "", fmt.Errorf("cannot complete the request")
 	}
 	var mail = new(bytes.Buffer)
-	err = template.Must(template.New("mail").Parse("your token is {{.Token}}")).Execute(mail, u)
+	err = template.Must(template.New("mail").Parse(config.Get("APP_INVITATION_TEMPLATE"))).Execute(mail, map[string]string{
+		"Name": u.Name,
+		"Link": "https://devo.vidavidavida.com/update_pass?token=" + u.Token,
+	})
 	if nil != err {
 		return "", err
 	}
