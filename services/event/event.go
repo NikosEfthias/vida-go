@@ -2,12 +2,17 @@ package event
 
 import (
 	//{{{
+	"bytes"
 	"fmt"
+	"html/template"
 	"io"
+	"math"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/mugsoft/tools/bytesize"
+	"gitlab.mugsoft.io/vida/api/go-api/config"
 	"gitlab.mugsoft.io/vida/api/go-api/helpers"
 	"gitlab.mugsoft.io/vida/api/go-api/models"
 	"gitlab.mugsoft.io/vida/api/go-api/services"
@@ -49,9 +54,11 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 	if nil != err {
 		return "", fmt.Errorf("invalid min-max guest number option error: %s", err.Error())
 	}
-	__f_cost, err := strconv.ParseFloat(cost, 64)
+	_f_cost, err := strconv.ParseFloat(cost, 64)
 	if nil != err {
-		return "", fmt.Errorf("invalid min-max guest number option error: %s", err.Error())
+		return "", fmt.Errorf("invalid cost number option error: %s", err.Error())
+	} else if math.IsNaN(_f_cost) {
+		return "", fmt.Errorf("cost cannot be non")
 	}
 	__data_url, err := helpers.Multipart_to_data_url(img, LIMIT_FILESIZE, ALLOWED_MIMES)
 	if nil != err {
@@ -69,7 +76,7 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 		Detail:    details,
 		MaxGuest:  __i_max_num_guests,
 		MinGuest:  __i_min_num_guests,
-		Cost:      __f_cost,
+		Cost:      _f_cost,
 		Img:       __data_url,
 		Votable:   __b_votable,
 		StartDate: time.Unix(__i_start_date, 0),
@@ -137,4 +144,43 @@ func Service_get_by_participant(token, page string, filter_options interface{}) 
 		return "", fmt.Errorf("page is not a valid integer err:%s", err.Error())
 	} //}}}
 	return models.Event_get_by_guest(u.Id, _i_page) //}}}
+}
+func Service_event_invite(token, event_id, invitees string) (string, error) {
+	//{{{
+	// error checks{{{
+	u := storage.Get_user_by_token(token)
+	if nil == u {
+		return "", services.ERR_N_LOGIN
+	}
+	var _invitees = strings.Split(invitees, ":")
+	if len(_invitees) < 1 {
+		return "", fmt.Errorf("no email to invite")
+	}
+	event, err := models.Event_get_by_id(event_id)
+	if nil != err {
+		return "", fmt.Errorf("invalid event id :%s", err.Error())
+	}
+	if u.Id != event.Owner {
+		return "", fmt.Errorf("Only event owners can invite users")
+	}
+	//}}}
+	for _, invitee := range _invitees {
+		usr, err := models.User_or_tmp(invitee)
+		if nil != err {
+			helpers.Log(helpers.ERR, err.Error())
+			return "", fmt.Errorf("unexpected system error")
+		}
+		var buf = new(bytes.Buffer)
+		err = template.Must(template.New("mail").Parse(config.Get("APP_INVITATION_TEMPLATE"))).
+			Execute(buf, map[string]string{"Name": u.Name, "Link": config.Get("APP_BASE_URL") + "/#/accept_invitation?token=" + usr.Token})
+			//TODO:  add custom message to the invitation
+		inv, err := models.Invitation_create(models.INV_EVENT, []rune(event_id), u.Id, usr.Id, buf.String())
+		if nil != err {
+			helpers.Log(helpers.ERR, "invitation cannot be created err:", err)
+			return "", fmt.Errorf("Cannot create invitation")
+		}
+		helpers.SendOneMailPreconfigured(invitee, "Event Invitation", inv.Message)
+	}
+	return "", fmt.Errorf("not implemented yet")
+	//}}}
 }
