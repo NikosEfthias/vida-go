@@ -66,7 +66,7 @@ var conf = map[string]string{
 												<td style="-ms-text-size-adjust: 100%; -ms-text-size-adjust: 100%; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%; color: #9095a2; font-family: 'Postmates Std', 'Helvetica', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 16px; font-smoothing: always; font-style: normal; font-weight: 400; letter-spacing: -0.18px; line-height: 24px; mso-line-height-rule: exactly; text-decoration: none; vertical-align: top; width: 100%;">
 													<p>Your friend {{.Name}} invited to join Vida. Vida is spanish for Life. Vida is a mobile and desktop app for seamless group & team event planning.</p>
 													<p>Life is too short to spend planning, help {{.Name}} organize an event so you can go back to your Vida.</p>
-													<a href="#">{{.Link}}</a>
+													<a href="{{.Link}}">{{.Link}}</a>
 													<p>Looking forward to seeing you on Vida.</p>
 													<p>Cheers!</p>
 													<p>The Vida Team</p>
