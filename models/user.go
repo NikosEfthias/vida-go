@@ -27,7 +27,7 @@ type User struct {
 	Token         string    `bson:"-" json:"token"`
 	ProfilePicURL string    `bson:"profile_pic_url" json:"profile_pic_url"`
 	PassReset     bool      `bson:"pass_reset" json:"pass_reset,omitempty"`
-	Tmp           bool      `json:"tmp,omitempty" bson:"-"`
+	Tmp           bool      `json:"tmp,omitempty" bson:"tmp"`
 	Defaults
 	//}}}
 }
@@ -57,6 +57,13 @@ func Hash_password(u *User, pass string) string {
 		u.Id = helpers.Unique_id()
 	}
 	return helpers.MD5(u.Id + pass)
+	//}}}
+}
+func User_get_by_id(id string) (*User, error) {
+	//{{{
+	var usr = new(User)
+	err := _col_user.Find(map[string]string{"id": id}).One(usr)
+	return usr, err
 	//}}}
 }
 
@@ -123,10 +130,12 @@ func User_new_tmp(email string) (*User, error) {
 	if nil == User_get(u) {
 		return nil, fmt.Errorf("user exists")
 	} //}}}
-	u.Id = helpers.Unique_id()
-	u.Token = helpers.Unique_id()
 	u.Tmp = true
-	return u, nil //}}}
+	err := User_new(u)
+	if nil != u {
+		u.Token = helpers.Unique_id()
+	}
+	return u, err //}}}
 }
 
 //User_or_tmp returns the given user by email or creates and returns a tmp user
@@ -141,8 +150,10 @@ func User_or_tmp(email string) (*User, error) {
 	if nil == User_get(u) {
 		return u, nil
 	}
-	u.Id = helpers.Unique_id()
-	u.Token = helpers.Unique_id()
 	u.Tmp = true
-	return u, nil //}}}
+	err := User_new(u)
+	if nil != u {
+		u.Token = helpers.Unique_id()
+	}
+	return u, err //}}}
 }
