@@ -89,6 +89,9 @@ func Service_profile_pic(token string, file io.Reader) (string, error) {
 	if nil == u {
 		return "", services.ERR_N_LOGIN
 	}
+	if u.PassReset {
+		return "", fmt.Errorf("pass reset key cannot be used for anything other than password reset")
+	}
 	__data_url, err := helpers.Multipart_to_data_url(file, LIMIT_FILESIZE, ALLOWED_MIMES)
 	if nil != err {
 		return "", fmt.Errorf("cannot process the file error : %s", err.Error())
