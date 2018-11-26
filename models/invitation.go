@@ -11,7 +11,7 @@ import (
 
 const __COL_INVITATION_STR = "invitations"
 
-var __col_invitation = db_get().C(__COL_INVITATION_STR)
+var _col_invitation = db_get().C(__COL_INVITATION_STR)
 
 type Invitation_type int
 type Invitation_status int
@@ -59,8 +59,7 @@ func Invitation_create(typ Invitation_type, event_id []rune, inviter string, inv
 	case message == "":
 		return nil, fmt.Errorf("missing invitation body")
 	}
-	var events = make([]*Invitation, 0)
-	err := Invitation_get_by_invitee(typ, invitee, events, string(event_id))
+	events, err := Invitation_get_by_invitee(typ, invitee, string(event_id))
 	if len(events) > 0 && nil == err {
 		return nil, fmt.Errorf("invitee has already been invited to this event")
 	}
@@ -74,21 +73,26 @@ func Invitation_create(typ Invitation_type, event_id []rune, inviter string, inv
 	i.CreatedAt = time.Now()
 	i.UpdatedAt = time.Now()
 	i.Status = INV_STATUS_PENDING
-	return i, __col_invitation.Insert(i)
+	return i, _col_invitation.Insert(i)
 	//}}}
 }
 
 //Invitation_get_by_invitee fetches the invitations based on type and invitee_id and optionally by event id
 //and fills the result with that on unsuccessful fetch it will return an error otherwise nil
-func Invitation_get_by_invitee(invitationtype Invitation_type, invitee string, result []*Invitation, event_id ...string) error {
+func Invitation_get_by_invitee(invitationtype Invitation_type, invitee string, event_id string) ([]*Invitation, error) {
 	//{{{
 	q := map[string]interface{}{
 		"type":       invitationtype,
 		"invitee_id": invitee,
 	}
+	var result []*Invitation
 	if len(event_id) > 0 {
-		q["event_id"] = event_id[0]
+		q["event_id"] = event_id
+		result = make([]*Invitation, 0, 1)
+	} else {
+		result = make([]*Invitation, 0, 10)
 	}
-	return __col_invitation.Find(q).All(&result)
+	err := _col_invitation.Find(q).All(&result)
+	return result, err
 	//}}}
 }
