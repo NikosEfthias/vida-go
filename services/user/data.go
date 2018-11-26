@@ -92,13 +92,13 @@ func Service_profile_pic(token string, file io.Reader) (string, error) {
 	if u.PassReset {
 		return "", fmt.Errorf("pass reset key cannot be used for anything other than password reset")
 	}
-	__data_url, err := helpers.Multipart_to_data_url(file, LIMIT_FILESIZE, ALLOWED_MIMES)
+	_data_url, err := helpers.Multipart_to_data_url(file, LIMIT_FILESIZE, ALLOWED_MIMES)
 	if nil != err {
 		return "", fmt.Errorf("cannot process the file error : %s", err.Error())
 	}
-	__token := u.Token //update destroys the old token so lets save it
-	err = models.User_update(u.Id, map[string]interface{}{"profile_pic_url": __data_url}, u)
-	u.Token = __token
+	_token := u.Token //update destroys the old token so lets save it
+	err = models.User_update(u.Id, map[string]interface{}{"profile_pic_url": _data_url}, u)
+	u.Token = _token
 	if nil != err {
 		return "", fmt.Errorf("err updating the user: %s", err.Error())
 	}
