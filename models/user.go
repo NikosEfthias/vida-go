@@ -36,16 +36,29 @@ type User struct {
 func User_new(u *User) error {
 	//{{{
 	//{{{ error checks
+	if nil == u {
+		return fmt.Errorf("user cannot be empty")
+	}
 	if "" == u.Email && "" == u.Phone {
 		return fmt.Errorf("missing email and phone")
 	}
-	if nil == User_get(u) {
+	var usr = new(User)
+	*usr = *u
+	if nil == User_get(usr) && !usr.Tmp {
 		return fmt.Errorf("user exists")
 	} //}}}
 	u.Id = helpers.Unique_id()
 	u.Password = Hash_password(u, u.Password)
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = time.Now()
+	if usr.Tmp && usr.Id != "" {
+		usr.Password = u.Password
+		usr.CreatedAt = u.CreatedAt
+		usr.UpdatedAt = u.UpdatedAt
+		usr.Tmp = false
+		helpers.Log(helpers.INFO, "tmp user registering : ", usr.Email)
+		return _col_user.Update(bson.M{"id": usr.Id}, usr)
+	}
 	return _col_user.Insert(u)
 	//}}}
 }

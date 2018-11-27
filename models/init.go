@@ -27,3 +27,7 @@ type Defaults struct {
 	CreatedAt time.Time `bson:"created_at" json:"created_at"`
 	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
 }
+
+func _update_fields(q map[string]interface{}) map[string]interface{} {
+	return map[string]interface{}{"$set": q}
+}

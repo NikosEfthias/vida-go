@@ -176,8 +176,8 @@ func Service_event_invite(token, event_id, invitees string) (string, error) {
 			//TODO:  add custom message to the invitation
 		inv, err := models.Invitation_create(models.INV_EVENT, []rune(event_id), u.Id, usr.Id, buf.String())
 		if nil != err {
-			helpers.Log(helpers.ERR, "invitation cannot be created err:", err)
-			return "", fmt.Errorf("Cannot create invitation")
+			helpers.Log(helpers.ERR, "invitation cannot be created err:", err.Error())
+			return "", fmt.Errorf("Cannot create invitation reason: %v", err.Error())
 		}
 		helpers.SendOneMailPreconfigured(invitee, "Event Invitation", inv.Message)
 	}
