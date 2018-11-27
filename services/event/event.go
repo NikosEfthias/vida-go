@@ -114,7 +114,7 @@ func Service_get_by_id(token string, qid string, filter_options interface{}) (in
 	if nil != err {
 		return nil, err
 	}
-	if !helpers.Can_user_see_event(u.Id, e.Guests, e.Owner) {
+	if !helpers.Can_user_see_event(u.Id, e.GetGuestIds(), e.Owner) {
 		return nil, fmt.Errorf("only the event owner and the guest can see the event details")
 	}
 	return e, nil //}}}
@@ -181,6 +181,19 @@ func Service_event_invite(token, event_id, invitees string) (string, error) {
 		}
 		helpers.SendOneMailPreconfigured(invitee, "Event Invitation", inv.Message)
 	}
-	return "", fmt.Errorf("not implemented yet")
+	return "success", nil
 	//}}}
+}
+func Service_event_accept(token, event_id string) (string, error) {
+	//{{{
+	//error checks {{{
+	u := storage.Get_user_by_token(token)
+	if nil == u {
+		return "", services.ERR_N_LOGIN
+	}
+	inv, err := models.Invitation_get_by_invitee(models.INV_EVENT, u.Id, event_id)
+	if len(inv) < 1 || err != nil {
+		return "", fmt.Errorf("invitation does not exist")
+	} //}}}
+	return "", fmt.Errorf("not implemented yet") //}}}
 }

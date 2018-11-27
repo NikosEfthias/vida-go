@@ -71,4 +71,10 @@ func mount__event(mux *httprouter.Router) {
 			msg, err := event.Service_event_invite(p.ByName("token"), p.ByName("event_id"), __fv(r, "invitees"))
 			__respond__from__service(msg, err, w, r)
 		}) //}}}
+	mux.POST(PREFIX_EVENT+"/accept/:event_id/:token",
+		//{{{
+		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+			msg, err := event.Service_event_accept(p.ByName("token"), p.ByName("event_id"))
+			__respond__from__service(msg, err, w, r)
+		}) //}}}
 }

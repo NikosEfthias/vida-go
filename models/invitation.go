@@ -32,11 +32,11 @@ type Invitation struct {
 	//Id of the Invitation
 	Id string `json:"-" bson:"id,omitempty"`
 	//EventId of the event the Invitation issued for
-	EventId string            `json:"-" bson:"event_id,omitempty"`
-	Status  Invitation_status `json:"status,omitempty" bson:"status,omitempty"`
+	EventId string            `json:"event_id" bson:"event_id,omitempty"`
+	Status  Invitation_status `json:"status" bson:"status"`
 	Message string            `json:"message,omitempty" bson:"message,omitempty"`
 	//Type can be app invitation or an invitation to a particular event
-	Type      Invitation_type `json:"type,omitempty" bson:"type,omitempty"`
+	Type      Invitation_type `json:"type" bson:"type"`
 	InviterId string          `json:"inviter_id,omitempty" bson:"inviter_id,omitempty"`
 	InviteeId string          `json:"invitee_id,omitempty" bson:"invitee_id,omitempty"`
 	//Invitee user details. This is ignored during db insertion
@@ -77,6 +77,28 @@ func Invitation_create(typ Invitation_type, event_id []rune, inviter string, inv
 	//}}}
 }
 
+//_inv_user_get fills the invitee field of the invitation
+func _inv_user_get(inv *Invitation) error {
+	//{{{
+	invitee, err := User_get_by_id(inv.InviteeId)
+	inv.Invitee = invitee
+	return err //}}}
+}
+
+//Invitation_get_by_event gets all the invitations by event and adds user data to the invitations as well if possible
+func Invitation_get_by_event(event_id string) ([]*Invitation, error) {
+	//{{{
+	var invs = make([]*Invitation, 0, 100)
+	err := _col_invitation.Find(map[string]string{"event_id": event_id}).All(&invs)
+	if nil != err {
+		return nil, err
+	}
+	for _, inv := range invs {
+		_inv_user_get(inv)
+	}
+	return invs, nil //}}}
+}
+
 //Invitation_get_by_invitee fetches the invitations based on type and invitee_id and optionally by event id
 //and fills the result with that on unsuccessful fetch it will return an error otherwise nil
 func Invitation_get_by_invitee(invitationtype Invitation_type, invitee string, event_id string) ([]*Invitation, error) {
@@ -95,4 +117,10 @@ func Invitation_get_by_invitee(invitationtype Invitation_type, invitee string, e
 	err := _col_invitation.Find(q).All(&result)
 	return result, err
 	//}}}
+}
+
+//Invitation_accept sets the status of invitation to INV_STATUS_ACCEPTED
+func Invitation_accept(inv_id string) error {
+	//{{{
+	return _col_invitation.Update(map[string]string{"id": inv_id}, map[string]Invitation_status{"status": INV_STATUS_ACCEPTED}) //}}}
 }
