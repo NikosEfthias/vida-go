@@ -198,3 +198,16 @@ func Service_event_accept(token, event_id string) (string, error) {
 
 	return "success", models.Invitation_accept(event_id) //}}}
 }
+func Service_event_decline(token, event_id string) (string, error) {
+	//{{{
+	//error checks {{{
+	u := storage.Get_user_by_token(token)
+	if nil == u {
+		return "", services.ERR_N_LOGIN
+	}
+	inv, err := models.Invitation_get_by_invitee(models.INV_EVENT, u.Id, event_id)
+	if len(inv) < 1 || err != nil {
+		return "", fmt.Errorf("invitation does not exist")
+	} //}}}
+	return "success", models.Invitation_decline(event_id) //}}}
+}

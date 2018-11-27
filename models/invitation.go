@@ -124,3 +124,9 @@ func Invitation_accept(inv_id string) error {
 	//{{{
 	return _col_invitation.Update(map[string]string{"id": inv_id}, map[string]Invitation_status{"status": INV_STATUS_ACCEPTED}) //}}}
 }
+
+//Invitation_decline sets the status of invitation to INV_STATUS_ACCEPTED
+func Invitation_decline(inv_id string) error {
+	//{{{
+	return _col_invitation.Update(map[string]string{"id": inv_id}, map[string]Invitation_status{"status": INV_STATUS_DECLINED}) //}}}
+}
