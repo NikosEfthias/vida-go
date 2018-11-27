@@ -45,7 +45,7 @@ func Service_invite_people(token string, people []string) (string, error) {
 		//add a new invitation to the db {{{
 		var buf = new(bytes.Buffer)
 		err = template.Must(template.New("mail").Parse(config.Get("APP_INVITATION_TEMPLATE"))).Execute(buf,
-			map[string]string{"Name": u.Name, "Link": config.Get("APP_BASE_URL") + "/#/?token=" + usr.Token})
+			map[string]string{"Name": u.Name, "Link": config.Get("APP_BASE_URL") + "/#/dashboard?token=" + usr.Token})
 		if nil != err {
 			helpers.Log(helpers.ERR, "Cannot send app invitation to ", p, "err:", err)
 			errs = append(errs, err.Error())

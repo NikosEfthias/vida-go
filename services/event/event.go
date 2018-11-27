@@ -172,7 +172,7 @@ func Service_event_invite(token, event_id, invitees string) (string, error) {
 		}
 		var buf = new(bytes.Buffer)
 		err = template.Must(template.New("mail").Parse(config.Get("APP_INVITATION_TEMPLATE"))).
-			Execute(buf, map[string]string{"Name": u.Name, "Link": config.Get("APP_BASE_URL") + "/#/accept_invitation?token=" + usr.Token + "&event_id=" + event_id})
+			Execute(buf, map[string]string{"Name": u.Name, "Link": config.Get("APP_BASE_URL") + "/#/dashboard?token=" + usr.Token + "&event_id=" + event_id})
 			//TODO:  add custom message to the invitation
 		inv, err := models.Invitation_create(models.INV_EVENT, []rune(event_id), u.Id, usr.Id, buf.String())
 		if nil != err {
