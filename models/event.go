@@ -105,6 +105,9 @@ func Event_get_by_guest(guest_id string, page int) ([]*Event, error) {
 	}
 	var events = make([]*Event, 0, len(invs))
 	err = _col_event.Find(query).All(&events)
+	for _, e := range events {
+		_event_fill_invitations(e)
+	}
 	return events, err
 	//}}}
 }

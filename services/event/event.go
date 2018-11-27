@@ -197,7 +197,7 @@ func Service_event_accept(token, event_id string) (string, error) {
 		return "", fmt.Errorf("invitation does not exist")
 	} //}}}
 
-	return "success", models.Invitation_accept(event_id) //}}}
+	return "success", models.Invitation_accept(event_id, u.Id) //}}}
 }
 func Service_event_decline(token, event_id string) (string, error) {
 	//{{{
@@ -210,5 +210,5 @@ func Service_event_decline(token, event_id string) (string, error) {
 	if len(inv) < 1 || err != nil {
 		return "", fmt.Errorf("invitation does not exist")
 	} //}}}
-	return "success", models.Invitation_decline(event_id) //}}}
+	return "success", models.Invitation_decline(event_id, u.Id) //}}}
 }

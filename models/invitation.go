@@ -120,13 +120,13 @@ func Invitation_get_by_invitee(invitationtype Invitation_type, invitee string, e
 }
 
 //Invitation_accept sets the status of invitation to INV_STATUS_ACCEPTED
-func Invitation_accept(inv_id string) error {
+func Invitation_accept(event_id, user_id string) error {
 	//{{{
-	return _col_invitation.Update(map[string]string{"id": inv_id}, _update_fields(map[string]interface{}{"status": INV_STATUS_ACCEPTED})) //}}}
+	return _col_invitation.Update(map[string]string{"event_id": event_id, "invitee_id": user_id}, _update_fields(map[string]interface{}{"status": INV_STATUS_ACCEPTED})) //}}}
 }
 
 //Invitation_decline sets the status of invitation to INV_STATUS_ACCEPTED
-func Invitation_decline(inv_id string) error {
+func Invitation_decline(event_id, user_id string) error {
 	//{{{
-	return _col_invitation.Update(map[string]string{"id": inv_id}, _update_fields(map[string]interface{}{"status": INV_STATUS_DECLINED})) //}}}
+	return _col_invitation.Update(map[string]string{"event_id": event_id, "invitee_id": user_id}, _update_fields(map[string]interface{}{"status": INV_STATUS_DECLINED})) //}}}
 }
