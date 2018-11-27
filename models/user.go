@@ -161,6 +161,7 @@ func User_or_tmp(email string) (*User, error) {
 		Email: email,
 	}
 	if nil == User_get(u) {
+		u.Token = helpers.Unique_id()
 		return u, nil
 	}
 	u.Tmp = true
