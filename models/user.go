@@ -43,22 +43,34 @@ func User_new(u *User) error {
 		return fmt.Errorf("missing email and phone")
 	}
 	var usr = new(User)
-	*usr = *u
+	usr.Email = u.Email
+	usr.Phone = u.Phone
 	if nil == User_get(usr) && !usr.Tmp {
 		return fmt.Errorf("user exists")
 	} //}}}
 	u.Id = helpers.Unique_id()
-	u.Password = Hash_password(u, u.Password)
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = time.Now()
 	if usr.Tmp && usr.Id != "" {
 		usr.Password = u.Password
-		usr.CreatedAt = u.CreatedAt
+		usr.Password = Hash_password(usr, usr.Password)
 		usr.UpdatedAt = u.UpdatedAt
 		usr.Tmp = false
 		helpers.Log(helpers.INFO, "tmp user registering : ", usr.Email)
-		return _col_user.Update(bson.M{"id": usr.Id}, usr)
+		err := _col_user.Update(bson.M{"id": usr.Id}, map[string]interface{}{
+			"$set": map[string]interface{}{
+				"name":         u.Name,
+				"lastname":     u.Lastname,
+				"phone":        u.Phone,
+				"email":        u.Email,
+				"notification": u.Notification,
+				"password":     usr.Password,
+				"tmp":          false,
+			},
+		})
+		return err
 	}
+	u.Password = Hash_password(u, u.Password)
 	return _col_user.Insert(u)
 	//}}}
 }
