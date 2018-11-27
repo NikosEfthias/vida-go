@@ -195,5 +195,6 @@ func Service_event_accept(token, event_id string) (string, error) {
 	if len(inv) < 1 || err != nil {
 		return "", fmt.Errorf("invitation does not exist")
 	} //}}}
-	return "", fmt.Errorf("not implemented yet") //}}}
+
+	return "success", models.Invitation_accept(event_id) //}}}
 }
