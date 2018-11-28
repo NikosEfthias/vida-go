@@ -132,7 +132,7 @@ func Service_get_by_owner(token, page string, filter_options interface{}) (inter
 	} //}}}
 	return models.Event_get_by_owner(u.Id, _i_page) //}}}
 }
-func Service_get_by_participant(token, page string, filter_options interface{}) (interface{}, error) {
+func Service_get_by_participant(token, page string, filter_options map[string]interface{}) (interface{}, error) {
 	//{{{
 	//err checks {{{
 	u := storage.Get_user_by_token(token)
@@ -143,7 +143,7 @@ func Service_get_by_participant(token, page string, filter_options interface{}) 
 	if nil != err {
 		return "", fmt.Errorf("page is not a valid integer err:%s", err.Error())
 	} //}}}
-	return models.Event_get_by_guest(u.Id, _i_page) //}}}
+	return models.Event_get_by_guest(u.Id, _i_page, filter_options) //}}}
 }
 func Service_event_invite(token, event_id, invitees string) (string, error) {
 	//{{{

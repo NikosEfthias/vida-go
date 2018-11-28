@@ -2,7 +2,9 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/mugsoft/tools/bytesize"
@@ -59,10 +61,16 @@ func mount__event(mux *httprouter.Router) {
 			msg, err := event.Service_get_by_owner(p.ByName("token"), p.ByName("page"), nil)
 			__respond__from__service(msg, err, w, r)
 		}) //}}}
-	mux.GET(PREFIX_EVENT+"/byparticipant/:token/:page",
+	mux.POST(PREFIX_EVENT+"/byparticipant/:token/:page",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-			msg, err := event.Service_get_by_participant(p.ByName("token"), p.ByName("page"), nil)
+			var filters = map[string]interface{}{}
+			//filter checks{{{
+			if err := _fill_filter_int("status", __fv(r, "status"), filters); nil != err {
+				__respond__from__service("", err, w, r)
+			}
+			//}}}
+			msg, err := event.Service_get_by_participant(p.ByName("token"), p.ByName("page"), filters)
 			__respond__from__service(msg, err, w, r)
 		}) //}}}
 	mux.POST(PREFIX_EVENT+"/invite/:event_id/:token",
@@ -83,4 +91,19 @@ func mount__event(mux *httprouter.Router) {
 			msg, err := event.Service_event_decline(p.ByName("token"), p.ByName("event_id"))
 			__respond__from__service(msg, err, w, r)
 		}) //}}}
+}
+func _fill_filter_int(name, value string, store map[string]interface{}) error {
+	//{{{
+	if nil == store {
+		fmt.Errorf("nil store system error")
+	}
+	if value == "" {
+		return nil
+	}
+	i, err := strconv.Atoi(value)
+	if nil != err {
+		return err
+	}
+	store[name] = i
+	return nil //}}}
 }

@@ -92,19 +92,26 @@ func Event_get_by_id(id string) (*Event, error) {
 	//}}}
 }
 
-func Event_get_by_guest(guest_id string, page int) ([]*Event, error) {
+func Event_get_by_guest(guest_id string, page int, filters map[string]interface{}) ([]*Event, error) {
 	//{{{
 	invs := []*Invitation{}
-	err := _col_invitation.Find(map[string]string{"invitee_id": guest_id}).Skip(page * DATA_PER_PAGE).Limit(DATA_PER_PAGE).All(&invs)
+	var query map[string]interface{}
+	if nil != filters {
+		query = filters
+	} else {
+		query = map[string]interface{}{}
+	}
+	query["invitee_id"] = guest_id
+	err := _col_invitation.Find(query).Skip(page * DATA_PER_PAGE).Limit(DATA_PER_PAGE).All(&invs)
 	if nil != err {
 		return nil, err
 	}
-	var query = map[string]map[string][]string{"id": {"$in": []string{} /**/}}
+	var query_2 = map[string]map[string][]string{"id": {"$in": []string{} /**/}}
 	for _, inv := range invs {
-		query["id"]["$in"] = append(query["id"]["$in"], inv.EventId)
+		query_2["id"]["$in"] = append(query_2["id"]["$in"], inv.EventId)
 	}
 	var events = make([]*Event, 0, len(invs))
-	err = _col_event.Find(query).All(&events)
+	err = _col_event.Find(query_2).All(&events)
 	for _, e := range events {
 		_event_fill_invitations(e)
 	}
