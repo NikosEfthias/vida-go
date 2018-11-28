@@ -69,7 +69,7 @@ func Event_delete(id string) error {
 func Event_get_by_owner(owner_id string, page int) ([]*Event, error) {
 	//{{{
 	events := []*Event{}
-	err := _col_event.Find(map[string]string{"owner": owner_id}).Skip(page).Limit(DATA_PER_PAGE).All(&events)
+	err := _col_event.Find(map[string]string{"owner": owner_id}).Skip(DATA_PER_PAGE * page).Limit(DATA_PER_PAGE).All(&events)
 	if nil != err {
 		for _, event := range events {
 			_event_fill_invitations(event)
@@ -95,7 +95,7 @@ func Event_get_by_id(id string) (*Event, error) {
 func Event_get_by_guest(guest_id string, page int) ([]*Event, error) {
 	//{{{
 	invs := []*Invitation{}
-	err := _col_invitation.Find(map[string]string{"invitee_id": guest_id}).Skip(page).Limit(DATA_PER_PAGE).All(&invs)
+	err := _col_invitation.Find(map[string]string{"invitee_id": guest_id}).Skip(page * DATA_PER_PAGE).Limit(DATA_PER_PAGE).All(&invs)
 	if nil != err {
 		return nil, err
 	}
