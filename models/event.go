@@ -63,7 +63,12 @@ func Event_delete(id string) error {
 	if nil != err {
 		return err
 	}
-	return _col_event.Remove(map[string]string{"id": id})
+	err = _col_event.Remove(map[string]string{"id": id})
+	if nil != err {
+		return err
+	}
+	_, err = _col_invitation.RemoveAll(map[string]string{"event_id": id})
+	return err
 	//}}}
 }
 func Event_get_by_owner(owner_id string, page int) ([]*Event, error) {
