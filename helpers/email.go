@@ -14,9 +14,11 @@ func SendMail(uname, password, from string, to []string, server string, subject,
 		"\r\nFrom: <" + from + "> vida\r\n" +
 		"Content-Type: Text/HTML\r\n"
 	if len(to) > 0 {
-		for _, m := range to {
-			headers += fmt.Sprintf("To: %s\r\n", m)
+		headers += "To: " + to[0]
+		for _, m := range to[1:] {
+			headers += fmt.Sprintf(",%s", m)
 		}
+		headers += "\r\n"
 	}
 	headers += "\r\n\r\n"
 	return smtp.SendMail(server,
