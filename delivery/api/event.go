@@ -41,6 +41,12 @@ func mount__event(mux *httprouter.Router) {
 				f)
 			__respond__from__service(msg, err, w, r)
 		}) //}}}
+	mux.GET(PREFIX_EVENT+"/update/:event_id/:field/:value/:token",
+		//{{{
+		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+			msg, err := event.Service_update(p.ByName("token"), p.ByName("event_id"), p.ByName("field"), p.ByName("value"))
+			__respond__from__service(msg, err, w, r)
+		}) //}}}
 	mux.GET(PREFIX_EVENT+"/delete/:id/:token",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {

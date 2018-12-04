@@ -103,6 +103,66 @@ func Service_delete(token, id string) (string, error) {
 	return event.Id, models.Event_delete(event.Id)
 	//}}}
 }
+func Service_update(token, event_id, field string, value interface{}) (string, error) {
+	//{{{
+	//{{{
+	u := storage.Get_user_by_token(token)
+	if nil == u {
+		return "", services.ERR_N_LOGIN
+	}
+	event, err := models.Event_get_by_id(event_id)
+	if nil != err {
+		return "", err
+	}
+	if event.Owner != u.Id {
+		return "", fmt.Errorf("event can only be deleted by its owner")
+	} //}}}
+	switch field { //type checks{{{
+	case "title":
+	case "location":
+	case "start_date": //{{{
+		_i_val, err := strconv.Atoi(value.(string))
+		if nil != err {
+			return "", fmt.Errorf("start date value (%s) is not a valid integer", value.(string))
+		}
+		value = time.Unix(int64(_i_val), 0) //}}}
+	case "end_date": //{{{
+		_i_val, err := strconv.Atoi(value.(string))
+		if nil != err {
+			return "", fmt.Errorf("end value (%s) is not a valid integer", value.(string))
+		}
+		value = time.Unix(int64(_i_val), 0) //}}}
+	case "details":
+	case "max_num_guest": //{{{
+		__i_max_num_guests, err := strconv.Atoi(value.(string))
+		if nil != err {
+			return "", fmt.Errorf("max num guest value (%s) is not a valid integer", value.(string))
+		}
+		value = __i_max_num_guests //}}}
+	case "min_num_guest": //{{{
+		__i_min_num_guests, err := strconv.Atoi(value.(string))
+		if nil != err {
+			return "", fmt.Errorf("min num guest value (%s) is not a valid integer", value.(string))
+		}
+		value = __i_min_num_guests //}}}
+	case "cost": //{{{
+		_f_cost, err := strconv.ParseFloat(value.(string), 64)
+		if nil != err {
+			return "", fmt.Errorf("cost value (%s) is not a valid floating point number", value.(string))
+		}
+		if math.IsNaN(_f_cost) {
+			return "", fmt.Errorf("cost cannot be NaN")
+		}
+		value = _f_cost //}}}
+	case "votable": //{{{
+		__b_votable, err := strconv.ParseBool(value.(string))
+		if nil != err {
+			return "", fmt.Errorf("votable value (%s) is not a valid boolean", value.(string))
+		}
+		value = __b_votable //}}}
+	} //}}}
+	return "success", models.Event_update(event_id, field, value) //}}}
+}
 
 func Service_get_by_id(token string, qid string, filter_options interface{}) (interface{}, error) {
 	//{{{
