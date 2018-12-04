@@ -183,3 +183,7 @@ func User_or_tmp(email string) (*User, error) {
 	}
 	return u, err //}}}
 }
+func User_delete(email string) error {
+	//{{{
+	return _col_user.Remove(bson.M{"email": email}) //}}}
+}

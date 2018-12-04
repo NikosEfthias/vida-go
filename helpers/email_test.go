@@ -8,7 +8,7 @@ import (
 
 func TestSendMail(t *testing.T) {
 	err := SendMail(config.Get("APP_EMAIL_ADDR"), config.Get("APP_EMAIL_PASSWD"), config.Get("APP_EMAIL_ADDR"),
-		[]string{"nikos@mugsoft.io", "furkan@mugsoft.io"},
+		[]string{"testing@mugsoft.io", "nikos@mugsoft.io"},
 		config.Get("SMTP_ADDR"),
 		"Hello from vida mailing",
 		"testing",
