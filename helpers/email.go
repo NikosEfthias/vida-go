@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"fmt"
 	"net/smtp"
 	"strings"
 
@@ -11,8 +12,13 @@ func SendMail(uname, password, from string, to []string, server string, subject,
 	//{{{
 	headers := "Subject: " + subject +
 		"\r\nFrom: <" + from + "> vida\r\n" +
-		"Content-Type: Text/HTML\r\n" +
-		"\r\n\r\n"
+		"Content-Type: Text/HTML\r\n"
+	if len(to) > 0 {
+		for _, m := range to {
+			headers += fmt.Sprintf("To: %s\r\n", m)
+		}
+	}
+	headers += "\r\n\r\n"
 	return smtp.SendMail(server,
 		smtp.PlainAuth("", uname, password, strings.Split(server, ":")[0]),
 		from,

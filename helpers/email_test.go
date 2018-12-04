@@ -1,11 +1,15 @@
 package helpers
 
-import "testing"
+import (
+	"testing"
+
+	"gitlab.mugsoft.io/vida/go-api/config"
+)
 
 func TestSendMail(t *testing.T) {
-	err := SendMail("info@vidaevents.org", "_test_vida_", "info@vidaevents.org",
-		[]string{"nikos@mugsoft.io", "furkanaydin@mugsoft.io", "paulchavez.uw@icloud.com"},
-		"smtp.gmail.com:587",
+	err := SendMail(config.Get("APP_EMAIL_ADDR"), config.Get("APP_EMAIL_PASSWD"), config.Get("APP_EMAIL_ADDR"),
+		[]string{"nikos@mugsoft.io", "furkanaydin@mugsoft.io"},
+		config.Get("SMTP_ADDR"),
 		"Hello from vida mailing",
 		"testing",
 	)
