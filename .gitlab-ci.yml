@@ -1,7 +1,6 @@
-stages:
-  - build
 build:
-  stage: build
+  services:
+    - mongo
   tags:
     - go
   script:
@@ -9,3 +8,4 @@ build:
     - cp -r ../../vida $GOPATH/src/gitlab.mugsoft.io/
     - cd $GOPATH/src/gitlab.mugsoft.io/vida/go-api
     - go build
+    - go test ./...
