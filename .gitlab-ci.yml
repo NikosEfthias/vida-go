@@ -1,0 +1,11 @@
+stages:
+  - build
+build:
+  stage: build
+  tags:
+    - go
+  script:
+    - mkdir -p $GOPATH/src/gitlab.mugsoft.io
+    - cp -r ../../vida $GOPATH/src/gitlab.mugsoft.io/
+    - cd $GOPATH/src/gitlab.mugsoft.io/vida/go-api
+    - go build
