@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"gitlab.mugsoft.io/vida/api/go-api/helpers"
+	"gopkg.in/mgo.v2/bson"
 )
 
 const _COL_EVENT_STR = "events"
@@ -95,6 +96,14 @@ func Event_get_by_id(id string) (*Event, error) {
 	_event_fill_invitations(_e)
 	return _e, err
 	//}}}
+}
+func Event_update(event_id, field string, value interface{}) error {
+	//{{{
+	fields := map[string]interface{}{
+		"updated_at": time.Now(),
+		field:        value,
+	}
+	return _col_event.Update(bson.M{"id": event_id}, bson.M{"$set": fields}) //}}}
 }
 
 func Event_get_by_guest(guest_id string, page int, filters map[string]interface{}) ([]*Event, error) {
