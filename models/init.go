@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"gitlab.mugsoft.io/vida/api/go-api/config"
+	"gitlab.mugsoft.io/vida/go-api/config"
 	mgo "gopkg.in/mgo.v2"
 )
 

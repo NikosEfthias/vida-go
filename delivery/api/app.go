@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/julienschmidt/httprouter"
-	"gitlab.mugsoft.io/vida/api/go-api/services/app"
+	"gitlab.mugsoft.io/vida/go-api/services/app"
 )
 
 const PREFIX_APP = "/api/app"

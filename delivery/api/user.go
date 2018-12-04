@@ -7,8 +7,8 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/mugsoft/tools/bytesize"
-	"gitlab.mugsoft.io/vida/api/go-api/helpers"
-	"gitlab.mugsoft.io/vida/api/go-api/services/user"
+	"gitlab.mugsoft.io/vida/go-api/helpers"
+	"gitlab.mugsoft.io/vida/go-api/services/user"
 	//}}}
 )
 

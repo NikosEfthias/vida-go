@@ -12,11 +12,11 @@ import (
 	"time"
 
 	"github.com/mugsoft/tools/bytesize"
-	"gitlab.mugsoft.io/vida/api/go-api/config"
-	"gitlab.mugsoft.io/vida/api/go-api/helpers"
-	"gitlab.mugsoft.io/vida/api/go-api/models"
-	"gitlab.mugsoft.io/vida/api/go-api/services"
-	"gitlab.mugsoft.io/vida/api/go-api/services/storage"
+	"gitlab.mugsoft.io/vida/go-api/config"
+	"gitlab.mugsoft.io/vida/go-api/helpers"
+	"gitlab.mugsoft.io/vida/go-api/models"
+	"gitlab.mugsoft.io/vida/go-api/services"
+	"gitlab.mugsoft.io/vida/go-api/services/storage"
 	//}}}
 )
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.mugsoft.io/vida/api/go-api/helpers"
+	"gitlab.mugsoft.io/vida/go-api/helpers"
 	"gopkg.in/mgo.v2/bson"
 )
 

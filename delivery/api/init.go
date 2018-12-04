@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
-	"gitlab.mugsoft.io/vida/api/go-api/helpers"
+	"gitlab.mugsoft.io/vida/go-api/helpers"
 )
 
 //Mount root handler

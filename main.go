@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"gitlab.mugsoft.io/vida/api/go-api/config"
-	"gitlab.mugsoft.io/vida/api/go-api/delivery/api"
+	"gitlab.mugsoft.io/vida/go-api/config"
+	"gitlab.mugsoft.io/vida/go-api/delivery/api"
 )
 
 func main() {

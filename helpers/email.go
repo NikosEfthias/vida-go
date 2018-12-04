@@ -4,7 +4,7 @@ import (
 	"net/smtp"
 	"strings"
 
-	"gitlab.mugsoft.io/vida/api/go-api/config"
+	"gitlab.mugsoft.io/vida/go-api/config"
 )
 
 func SendMail(uname, password, from string, to []string, server string, subject, msg string) error {
