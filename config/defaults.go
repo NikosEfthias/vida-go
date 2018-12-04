@@ -118,10 +118,8 @@ func init() {
 
 //Get config
 func Get(k string) string {
-	if d, ok := conf[k]; ok && d != "" {
+	if d := os.Getenv(k); d != "" {
 		return d
-	} else {
-		return os.Getenv(k)
 	}
 	return conf[k]
 }
