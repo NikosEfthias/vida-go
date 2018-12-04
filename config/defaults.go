@@ -10,7 +10,7 @@ var conf = map[string]string{
 	"DB":               "vida",
 	"LISTEN_ADDR":      ":8080",
 	"APP_EMAIL_ADDR":   "info@vida.events",
-	"SMTP_ADDR":        "smtp.yandex.com:22",
+	"SMTP_ADDR":        "smtp.yandex.com:25",
 	"APP_EMAIL_PASSWD": "",
 	"APP_BASE_URL":     "https://vida.events",
 	//app invitation template {{{
