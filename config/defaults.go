@@ -9,10 +9,10 @@ var conf = map[string]string{
 	"DB_ADDR":          "mongodb://localhost:27017",
 	"DB":               "vida",
 	"LISTEN_ADDR":      ":8080",
-	"APP_EMAIL_ADDR":   "info@vidaevents.org",
-	"SMTP_ADDR":        "smtp.gmail.com:587",
-	"APP_EMAIL_PASSWD": "<secret>",
-	"APP_BASE_URL":     "https://devo.vidavidavida.com",
+	"APP_EMAIL_ADDR":   "info@vida.events",
+	"SMTP_ADDR":        "smtp.yandex.com:22",
+	"APP_EMAIL_PASSWD": "",
+	"APP_BASE_URL":     "https://vida.events",
 	//app invitation template {{{
 	"APP_INVITATION_TEMPLATE": `<html>
 
@@ -118,5 +118,10 @@ func init() {
 
 //Get config
 func Get(k string) string {
+	if d, ok := conf[k]; ok && d != "" {
+		return d
+	} else {
+		return os.Getenv(k)
+	}
 	return conf[k]
 }
