@@ -115,7 +115,7 @@ func Service_update(token, event_id, field string, value interface{}) (string, e
 		return "", err
 	}
 	if event.Owner != u.Id {
-		return "", fmt.Errorf("event can only be deleted by its owner")
+		return "", fmt.Errorf("event can only be updated by its owner")
 	} //}}}
 	switch field { //type checks{{{
 	case "title":
