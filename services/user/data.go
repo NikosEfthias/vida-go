@@ -81,7 +81,7 @@ func Service_update(key, token string, value interface{}) (string, error) {
 func Service_profile_pic(token string, file io.Reader) (string, error) {
 	//{{{
 	const LIMIT_FILESIZE = bytesize.MB * 10
-	var ALLOWED_MIMES = []string{"jpeg", "jpg", "png", "jpeg"}
+	var ALLOWED_MIMES = []string{"jpg", "png", "jpeg"}
 	if file == nil {
 		return "", fmt.Errorf("cannot read the file")
 	}
