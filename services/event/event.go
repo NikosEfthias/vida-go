@@ -240,6 +240,10 @@ func Service_event_invite(token, event_id, invitees string) (string, error) {
 			return "", fmt.Errorf("Cannot create invitation reason: %v", err.Error())
 		}
 		helpers.SendOneMailPreconfigured(invitee, "Event Invitation", inv.Message)
+		//if the user is already logged in then use the old token instead of creating a new one and logging out the user
+		if _usr := storage.Get_user_by_id(usr.Id); nil != _usr && _usr.Token != "" {
+			usr.Token = _usr.Token
+		}
 		storage.Add_or_update_user(usr)
 	}
 	return "success", nil
