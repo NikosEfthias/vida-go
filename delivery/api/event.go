@@ -47,7 +47,7 @@ func mount__event(mux *httprouter.Router) {
 			msg, err := event.Service_update(p.ByName("token"), p.ByName("event_id"), p.ByName("field"), __fv(r, "value"))
 			__respond__from__service(msg, err, w, r)
 		}) //}}}
-	mux.POST(PREFIX_EVENT+"/update/pp/:event_id/:token",
+	mux.PUT(PREFIX_EVENT+"/update/pp/:event_id/:token",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			if nil != __parse__multipart__form(w, r, int64(bytesize.MB*5)) {
