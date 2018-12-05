@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/julienschmidt/httprouter"
 	"gitlab.mugsoft.io/vida/go-api/helpers"
@@ -31,11 +32,17 @@ func __middleware_headers_set(next http.Handler) http.Handler {
 		"Content-Type":                 "application/json",
 		"Access-Control-Allow-Origin":  "*",
 		"Access-Control-Allow-Headers": "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD",
+		"Allow": "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD",
 	}
 
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		for k, v := range __hdrs {
 			w.Header().Set(k, v)
+		}
+		//handle options requests
+		if strings.ToLower(r.Method) == "options" {
+			__respond__from__service("success", nil, w, r)
+			return
 		}
 		next.ServeHTTP(w, r)
 	}
