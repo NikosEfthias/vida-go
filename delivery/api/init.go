@@ -30,7 +30,7 @@ func __middleware_headers_set(next http.Handler) http.Handler {
 	__hdrs := map[string]string{
 		"Content-Type":                 "application/json",
 		"Access-Control-Allow-Origin":  "*",
-		"Access-Control-Allow-Headers": "GET, POST, PUT, PATCH, DELETE",
+		"Access-Control-Allow-Headers": "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD",
 	}
 
 	fn := func(w http.ResponseWriter, r *http.Request) {
