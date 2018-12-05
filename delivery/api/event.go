@@ -41,10 +41,25 @@ func mount__event(mux *httprouter.Router) {
 				f)
 			__respond__from__service(msg, err, w, r)
 		}) //}}}
-	mux.GET(PREFIX_EVENT+"/update/:event_id/:field/:value/:token",
+	mux.POST(PREFIX_EVENT+"/update/:event_id/:field/:token",
 		//{{{
 		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-			msg, err := event.Service_update(p.ByName("token"), p.ByName("event_id"), p.ByName("field"), p.ByName("value"))
+			msg, err := event.Service_update(p.ByName("token"), p.ByName("event_id"), p.ByName("field"), __fv(r, "value"))
+			__respond__from__service(msg, err, w, r)
+		}) //}}}
+	mux.POST(PREFIX_EVENT+"/update/pp/:event_id/:token",
+		//{{{
+		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+			if nil != __parse__multipart__form(w, r, int64(bytesize.MB*5)) {
+				return
+			}
+			f, _, err := r.FormFile("file")
+			if nil != err {
+				helpers.Log(helpers.ERR, err.Error())
+				json.NewEncoder(w).Encode(map[string]string{"error": "cannot parse file"})
+			}
+			defer f.Close()
+			msg, err := event.Service_update_img(p.ByName("token"), p.ByName("event_id"), f)
 			__respond__from__service(msg, err, w, r)
 		}) //}}}
 	mux.GET(PREFIX_EVENT+"/delete/:id/:token",

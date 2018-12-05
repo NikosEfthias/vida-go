@@ -163,6 +163,31 @@ func Service_update(token, event_id, field string, value interface{}) (string, e
 	} //}}}
 	return "success", models.Event_update(event_id, field, value) //}}}
 }
+func Service_update_img(token, event_id string, file io.Reader) (string, error) {
+	//{{{
+	//{{{
+	const LIMIT_FILESIZE = bytesize.MB * 10
+	var ALLOWED_MIMES = []string{"jpg", "png", "jpeg"}
+	if file == nil {
+		return "", fmt.Errorf("cannot read the file")
+	}
+	u := storage.Get_user_by_token(token)
+	if nil == u {
+		return "", services.ERR_N_LOGIN
+	}
+	event, err := models.Event_get_by_id(event_id)
+	if nil != err {
+		return "", err
+	}
+	if event.Owner != u.Id {
+		return "", fmt.Errorf("event can only be deleted by its owner")
+	} //}}}
+	_data_url, err := helpers.Multipart_to_data_url(file, LIMIT_FILESIZE, ALLOWED_MIMES)
+	if nil != err {
+		return "", fmt.Errorf("cannot process the file error : %s", err.Error())
+	}
+	return "success", models.Event_update(event_id, "img", _data_url) //}}}
+}
 
 func Service_get_by_id(token string, qid string, filter_options interface{}) (interface{}, error) {
 	//{{{
