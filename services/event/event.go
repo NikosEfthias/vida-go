@@ -250,6 +250,10 @@ func Service_event_invite(token, event_id, invitees string) (string, error) {
 	}
 	//}}}
 	for _, invitee := range _invitees {
+		//users cannot invite themselves
+		if invitee == u.Email {
+			continue
+		}
 		usr, err := models.User_or_tmp(invitee)
 		if nil != err {
 			helpers.Log(helpers.ERR, err.Error())
