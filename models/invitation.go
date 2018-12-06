@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"gitlab.mugsoft.io/vida/go-api/helpers"
+	"gopkg.in/mgo.v2/bson"
 	//}}}
 )
 
@@ -75,6 +76,10 @@ func Invitation_create(typ Invitation_type, event_id []rune, inviter string, inv
 	i.Status = INV_STATUS_PENDING
 	return i, _col_invitation.Insert(i)
 	//}}}
+}
+func Invitation_delete(invitation_id string) error {
+	//{{{
+	return _col_invitation.Remove(bson.M{"id": invitation_id}) //}}}
 }
 
 //_inv_user_get fills the invitee field of the invitation
