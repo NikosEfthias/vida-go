@@ -1,6 +1,10 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+
+	"gopkg.in/mgo.v2/bson"
+)
 
 const _COL_VOTE_STR = "votes"
 
@@ -8,13 +12,31 @@ var _col_vote = db_get().C(_COL_VOTE_STR)
 
 type Vote struct {
 	//{{{
-	Id        string
-	Voter_id  string
-	Event_id  string
-	Vote_time int64
+	Voter_id  string `json:"voter_id" bson:"voter_id"`
+	Event_id  string `json:"event_id" bson:"event_id"`
+	Vote_time int64  `json:"vote_time" bson:"vote_time"`
 	//}}}
 }
 
 func Vote_event(event_id, user_id string, time int64) error {
+	//{{{{{{
+	_, err := _col_vote.Upsert(bson.M{
+		"event_id": event_id,
+		"voter_id": user_id,
+	}, bson.M{
+		"$set": bson.M{"time": time},
+	})
+	//}}}
+	return err //}}}
+}
+func Votes_get_for_event(event_id string) ([]Vote, error) {
+	//{{{
+	var votes = make([]Vote, 0, 10)
+	err := _col_vote.Find(bson.M{"event_id": event_id}).All(&votes)
+	return votes, err //}}}
+}
+func Delete_vote(voter_id, event_id string) error {
+	//{{{
 	return fmt.Errorf("not implemented yet")
+	//}}}
 }
