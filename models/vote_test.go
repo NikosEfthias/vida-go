@@ -57,5 +57,19 @@ func TestVotes_get_for_event(t *testing.T) {
 	//}}}
 }
 func TestDelete_vote(t *testing.T) {
-
+	//{{{
+	defer _test_vote_cleanup("__test__")
+	err := Vote_event("1", "__test__", 0)
+	if nil != err {
+		t.Fatalf("expected error to be nil found %v", err)
+	}
+	err = Delete_vote("1", "__test__")
+	if nil != err {
+		t.Fatalf("expected error to be nil while deleting an existing vote bot found error (%v)", err)
+	}
+	err = Delete_vote("1", "__test__")
+	if nil == err {
+		t.Fatalf("deleting a non existing event must fail yet theres no error")
+	}
+	//}}}
 }

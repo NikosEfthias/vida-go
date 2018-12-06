@@ -1,7 +1,7 @@
 package models
 
 import (
-	"fmt"
+	"time"
 
 	"gopkg.in/mgo.v2/bson"
 )
@@ -12,9 +12,9 @@ var _col_vote = db_get().C(_COL_VOTE_STR)
 
 type Vote struct {
 	//{{{
-	Voter_id  string `json:"voter_id" bson:"voter_id"`
-	Event_id  string `json:"event_id" bson:"event_id"`
-	Vote_time int64  `json:"vote_time" bson:"vote_time"`
+	Voter_id string    `json:"voter_id" bson:"voter_id"`
+	Event_id string    `json:"event_id" bson:"event_id"`
+	Time     time.Time `json:"time" bson:"time"`
 	//}}}
 }
 
@@ -35,8 +35,8 @@ func Votes_get_for_event(event_id string) ([]Vote, error) {
 	err := _col_vote.Find(bson.M{"event_id": event_id}).All(&votes)
 	return votes, err //}}}
 }
-func Delete_vote(voter_id, event_id string) error {
+func Delete_vote(event_id, voter_id string) error {
 	//{{{
-	return fmt.Errorf("not implemented yet")
+	return _col_vote.Remove(bson.M{"event_id": event_id, "voter_id": voter_id})
 	//}}}
 }
