@@ -20,6 +20,14 @@ import (
 	//}}}
 )
 
+var (
+	ERR_EVENT_NOT_FOUND    = fmt.Errorf("invalid event id")
+	ERR_INVALID_EVENT_ID   = fmt.Errorf("invalid event id format")
+	ERR_INVALID_TIME       = fmt.Errorf("invalid time format")
+	ERR_NOT_INVITED        = fmt.Errorf("you are not invited or accepted your invitation")
+	ERR_INVALID_TIME_RANGE = fmt.Errorf("time cannot be earlier then the event start date or later than the event end date")
+)
+
 func Service_create(token, title, loc, startdate, enddate, details, max_num_guest, min_num_guest, cost, votable string, img io.Reader) (string, error) {
 	//{{{
 	// err checks{{{
@@ -188,7 +196,6 @@ func Service_update_img(token, event_id string, file io.Reader) (string, error) 
 	}
 	return "success", models.Event_update(event_id, "img", _data_url) //}}}
 }
-
 func Service_get_by_id(token string, qid string, filter_options interface{}) (interface{}, error) {
 	//{{{
 	u := storage.Get_user_by_token(token)
@@ -304,4 +311,41 @@ func Service_event_decline(token, event_id string) (string, error) {
 		return "", fmt.Errorf("invitation does not exist")
 	} //}}}
 	return "success", models.Invitation_decline(event_id, u.Id) //}}}
+}
+func Service_vote(token, event_id, time string) (string, error) {
+	//{{{
+	//error checks{{{
+	u := storage.Get_user_by_token(token)
+	if nil == u {
+		return "", services.ERR_N_LOGIN
+	}
+	_i_time, err := strconv.Atoi(time)
+	if nil != err {
+		return "", ERR_INVALID_TIME
+	}
+	if nil != helpers.Check_id_format(event_id) {
+		return "", ERR_INVALID_EVENT_ID
+	}
+	event, err := models.Event_get_by_id(event_id)
+	if nil != err {
+		return "", ERR_EVENT_NOT_FOUND
+	}
+	if int64(_i_time) < event.StartDate.Unix() || int64(_i_time) > event.EndDate.Unix() {
+		return "", ERR_INVALID_TIME_RANGE
+	}
+	{ //check if user is invited{{{
+
+		var found bool
+		for _, i := range event.Invitations {
+			if i.InviteeId == u.Id && i.Status == models.INV_STATUS_ACCEPTED {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return "", ERR_NOT_INVITED
+		}
+	} //}}}
+	//}}}
+	return "success", models.Vote_event(event_id, u.Id, int64(_i_time)) //}}}
 }
