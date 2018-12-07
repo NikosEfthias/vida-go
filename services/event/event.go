@@ -26,6 +26,7 @@ var (
 	ERR_INVALID_TIME       = fmt.Errorf("invalid time format")
 	ERR_NOT_INVITED        = fmt.Errorf("you are not invited or accepted your invitation")
 	ERR_INVALID_TIME_RANGE = fmt.Errorf("time cannot be earlier then the event start date or later than the event end date")
+	ERR_EVENT_NOT_VOTABLE  = fmt.Errorf("event is not votable")
 )
 
 func Service_create(token, title, loc, startdate, enddate, details, max_num_guest, min_num_guest, cost, votable string, img io.Reader) (string, error) {
@@ -329,6 +330,9 @@ func Service_vote(token, event_id, time string) (string, error) {
 	event, err := models.Event_get_by_id(event_id)
 	if nil != err {
 		return "", ERR_EVENT_NOT_FOUND
+	}
+	if !event.Votable {
+		return "", ERR_EVENT_NOT_VOTABLE
 	}
 	if int64(_i_time) < event.StartDate.Unix() || int64(_i_time) > event.EndDate.Unix() {
 		return "", ERR_INVALID_TIME_RANGE
