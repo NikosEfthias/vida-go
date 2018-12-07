@@ -112,6 +112,12 @@ func mount__event(mux *httprouter.Router) {
 			msg, err := event.Service_event_decline(p.ByName("token"), p.ByName("event_id"))
 			__respond__from__service(msg, err, w, r)
 		}) //}}}
+	mux.GET(PREFIX_EVENT+"/vote/:event_id/:time/:token",
+		//{{{
+		func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+			msg, err := event.Service_vote(p.ByName("token"), p.ByName("event_id"), p.ByName("time"))
+			__respond__from__service(msg, err, w, r)
+		}) //}}}
 }
 func _fill_filter_int(name, value string, store map[string]interface{}) error {
 	//{{{
