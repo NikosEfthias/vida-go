@@ -29,9 +29,9 @@ func Vote_event(event_id, user_id string, time int64) error {
 	//}}}
 	return err //}}}
 }
-func Votes_get_for_event(event_id string) ([]Vote, error) {
+func Votes_get_for_event(event_id string) ([]*Vote, error) {
 	//{{{
-	var votes = make([]Vote, 0, 10)
+	var votes = make([]*Vote, 0, 10)
 	err := _col_vote.Find(bson.M{"event_id": event_id}).All(&votes)
 	return votes, err //}}}
 }

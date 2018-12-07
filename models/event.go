@@ -27,6 +27,7 @@ type Event struct {
 	StartDate   time.Time     `json:"start_date" bson:"start_date"`
 	EndDate     time.Time     `json:"end_date" bson:"end_date"`
 	Votable     bool          `json:"votable" bson:"votable"`
+	Votes       []*Vote       `json:"votes" bson:"-"`
 	Defaults
 	//}}}
 }
@@ -35,6 +36,12 @@ func _event_fill_invitations(e *Event) error {
 	//{{{
 	invs, err := Invitation_get_by_event(e.Id)
 	e.Invitations = invs
+	return err //}}}
+}
+func _event_fill_votes(e *Event) error {
+	//{{{
+	votes, err := Votes_get_for_event(e.Id)
+	e.Votes = votes
 	return err //}}}
 }
 func (e *Event) GetGuestIds() []string {
@@ -69,6 +76,10 @@ func Event_delete(id string) error {
 		return err
 	}
 	_, err = _col_invitation.RemoveAll(map[string]string{"event_id": id})
+	if nil != err {
+		return err
+	}
+	_, err = _col_vote.RemoveAll(map[string]string{"event_id": id})
 	return err
 	//}}}
 }
@@ -94,6 +105,7 @@ func Event_get_by_id(id string) (*Event, error) {
 	_e := new(Event)
 	err = _col_event.Find(map[string]string{"id": id}).One(_e)
 	_event_fill_invitations(_e)
+	_event_fill_votes(_e)
 	return _e, err
 	//}}}
 }
