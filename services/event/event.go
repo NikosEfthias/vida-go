@@ -189,7 +189,7 @@ func Service_update_img(token, event_id string, file io.Reader) (string, error) 
 		return "", err
 	}
 	if event.Owner != u.Id {
-		return "", fmt.Errorf("event can only be deleted by its owner")
+		return "", fmt.Errorf("event can only be updated by its owner")
 	} //}}}
 	_data_url, err := helpers.Multipart_to_data_url(file, LIMIT_FILESIZE, ALLOWED_MIMES)
 	if nil != err {
