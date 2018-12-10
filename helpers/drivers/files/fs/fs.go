@@ -2,6 +2,7 @@ package fs
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"gitlab.mugsoft.io/vida/go-api/config"
@@ -12,9 +13,11 @@ var (
 	E_INVALID_PATH = fmt.Errorf("invalid path")
 	E_INVALID_DATA = fmt.Errorf("invalid data")
 	E_WRITE        = fmt.Errorf("write error")
+	E_NOT_FOUND    = os.ErrNotExist
 )
 
-func Put(path string, data []byte) error {
+//Put file to destination address
+func Put(path string, data []byte) error { //{{{
 	if "" == path {
 		return E_INVALID_PATH
 	}
@@ -34,4 +37,17 @@ func Put(path string, data []byte) error {
 		return E_WRITE
 	}
 	return err
-}
+} //}}}
+//Get  file
+func Get(path string) ([]byte, error) { //{{{
+	if "" == path {
+		return nil, E_INVALID_PATH
+	}
+	path = config.Get("PUBLIC_FILES_PATH") + path
+	f, err := os.Open(path)
+	if nil != err {
+		return nil, E_NOT_FOUND
+	}
+	defer f.Close()
+	return ioutil.ReadAll(f)
+} //}}}
