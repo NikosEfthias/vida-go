@@ -39,8 +39,8 @@ func TestService_public_files(t *testing.T) { //{{{
 	}
 	// }}}
 } //}}}
-func __fail_on_err(err error, t *testing.T) {
+func __fail_on_err(err error, t *testing.T) { //{{{
 	if nil != err {
 		t.Fatal(err)
 	}
-}
+} //}}}
