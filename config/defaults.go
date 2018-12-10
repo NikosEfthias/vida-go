@@ -13,6 +13,8 @@ var conf = map[string]string{
 	"SMTP_ADDR":        "smtp.yandex.com:25",
 	"APP_EMAIL_PASSWD": "",
 	"APP_BASE_URL":     "https://vida.events",
+	"AWS_KEY":          "",
+	"AWS_SECRET":       "",
 	//app invitation template {{{
 	"APP_INVITATION_TEMPLATE": `<html>
 
