@@ -27,11 +27,13 @@ func TestService_vote(t *testing.T) { //{{{
 		Owner:     "123",
 		StartDate: time.Now().Add(time.Hour * 24),
 		EndDate:   time.Now().Add(time.Hour * 26),
+		Votable:   true,
 	}
 	var valid_event_accepted = &models.Event{
 		Owner:     "123",
 		StartDate: time.Now().Add(time.Hour * 24),
 		EndDate:   time.Now().Add(time.Hour * 26),
+		Votable:   true,
 	} //}}}
 	//setup{{{
 	storage.Add_or_update_user(&models.User{
