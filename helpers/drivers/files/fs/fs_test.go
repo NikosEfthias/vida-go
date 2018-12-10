@@ -8,7 +8,8 @@ import (
 )
 
 func TestPut(t *testing.T) {
-	defer os.Remove(config.Get("PUBLIC_FILES_PATH") + "test.bin")
+	os.MkdirAll(config.Get("PUBLIC_FILES_PATH"), 0777)
+	defer os.RemoveAll(config.Get("PUBLIC_FILES_PATH"))
 	//empty string must fail
 	err := Put("", nil)
 	if E_INVALID_PATH != err {
