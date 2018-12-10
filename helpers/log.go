@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
 	"time"
 )
 
@@ -37,7 +38,7 @@ func init() {
 }
 
 func log__format(data ...interface{}) []byte {
-	var _data = []interface{}{time.Now().Format("2006-01-02 03:04:05"), ">>\t"}
+	var _data = []interface{}{time.Now().Format("2006-01-02 03:04:05"), ">> "}
 	return []byte(fmt.Sprint(append(_data, data...)...))
 }
 
@@ -48,21 +49,24 @@ func Log_file_by_name(fname string, data ...interface{}) {
 		return
 	}
 	defer f.Close()
-	Log_file(f, data)
+	Log_file(f, data...)
 }
 
 func Log_file(f io.Writer, data ...interface{}) {
-	f.Write(log__format(data))
+	f.Write(log__format(data...))
 	f.Write([]byte{'\n'})
 }
 
 func Log(t Log_type, data ...interface{}) {
+	_, file, line, _ := runtime.Caller(1)
 	f, ok := _files[t]
 	if !ok {
-		fmt.Fprintln(os.Stderr, log__format("Unknown logger type"))
+		fmt.Fprintln(os.Stderr, log__format(file, line, "Unknown logger type"))
 		return
 	}
-	Log_file(f, data)
+	a := append([]interface{}{}, fmt.Sprintf("%s:%d\t", file, line))
+	a = append(a, data...)
+	Log_file(f, a...)
 }
 
 func __panic__err(err error) {
