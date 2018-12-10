@@ -18,13 +18,13 @@ type Vote struct {
 	//}}}
 }
 
-func Vote_event(event_id, user_id string, time int64) error {
+func Vote_event(event_id, user_id string, tm int64) error {
 	//{{{{{{
 	_, err := _col_vote.Upsert(bson.M{
 		"event_id": event_id,
 		"voter_id": user_id,
 	}, bson.M{
-		"$set": bson.M{"time": time},
+		"$set": bson.M{"time": time.Unix(tm, 0)},
 	})
 	//}}}
 	return err //}}}
