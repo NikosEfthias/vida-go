@@ -51,3 +51,7 @@ func Get(path string) ([]byte, error) { //{{{
 	defer f.Close()
 	return ioutil.ReadAll(f)
 } //}}}
+//Del  file
+func Del(path string) error { //{{{
+	return os.Remove(config.Get("PUBLIC_FILES_PATH") + path)
+} //}}}
