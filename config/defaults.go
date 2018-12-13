@@ -6,13 +6,16 @@ import (
 )
 
 var conf = map[string]string{
-	"DB_ADDR":          "mongodb://localhost:27017",
-	"DB":               "vida",
-	"LISTEN_ADDR":      ":8080",
-	"APP_EMAIL_ADDR":   "info@vida.events",
-	"SMTP_ADDR":        "smtp.yandex.com:25",
-	"APP_EMAIL_PASSWD": "",
-	"APP_BASE_URL":     "https://vida.events",
+	"DB_ADDR":           "mongodb://localhost:27017",
+	"DB":                "vida",
+	"LISTEN_ADDR":       ":8080",
+	"APP_EMAIL_ADDR":    "info@vida.events",
+	"SMTP_ADDR":         "smtp.yandex.com:25",
+	"APP_EMAIL_PASSWD":  "",
+	"APP_BASE_URL":      "https://vida.events",
+	"AWS_KEY":           "",
+	"AWS_SECRET":        "",
+	"PUBLIC_FILES_PATH": "public/",
 	//app invitation template {{{
 	"APP_INVITATION_TEMPLATE": `<html>
 

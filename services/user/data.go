@@ -8,6 +8,7 @@ import (
 
 	"github.com/mugsoft/tools/bytesize"
 	"gitlab.mugsoft.io/vida/go-api/helpers"
+	"gitlab.mugsoft.io/vida/go-api/helpers/drivers/files/fs"
 	"gitlab.mugsoft.io/vida/go-api/models"
 	"gitlab.mugsoft.io/vida/go-api/services"
 	"gitlab.mugsoft.io/vida/go-api/services/storage"
@@ -92,12 +93,16 @@ func Service_profile_pic(token string, file io.Reader) (string, error) {
 	if u.PassReset {
 		return "", fmt.Errorf("pass reset key cannot be used for anything other than password reset")
 	}
-	_data_url, err := helpers.Multipart_to_data_url(file, LIMIT_FILESIZE, ALLOWED_MIMES)
+	_, data, err := helpers.Multipart_to_byte_slice(file, LIMIT_FILESIZE, ALLOWED_MIMES)
 	if nil != err {
 		return "", fmt.Errorf("cannot process the file error : %s", err.Error())
 	}
+	fname, err := fs.Put_user_data(u.Id, data)
+	if nil != err {
+		return "", err
+	}
 	_token := u.Token //update destroys the old token so lets save it
-	err = models.User_update(u.Id, map[string]interface{}{"profile_pic_url": _data_url}, u)
+	err = models.User_update(u.Id, map[string]interface{}{"profile_pic_url": "/static/public/" + fname}, u)
 	u.Token = _token
 	if nil != err {
 		return "", fmt.Errorf("err updating the user: %s", err.Error())
