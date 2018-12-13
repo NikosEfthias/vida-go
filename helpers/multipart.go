@@ -37,7 +37,7 @@ func Multipart_to_byte_slice(img io.Reader, limit_filesize uint64, ALLOWED_MIMES
 		//we already consumed the first 512 bytes so if the read amount is big img is bigger no matter what
 		return "", nil, fmt.Errorf("too big")
 	}
-	return MIME, append(magic, imgbuf...), nil
+	return MIME, append(magic, imgbuf[:n]...), nil
 } //}}}
 
 func Check_mime(magic []byte, ALLOWED_MIMES []string) (MIME string, valid_mime bool) { //{{{
