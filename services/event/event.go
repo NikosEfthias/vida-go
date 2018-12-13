@@ -14,6 +14,7 @@ import (
 	"github.com/mugsoft/tools/bytesize"
 	"gitlab.mugsoft.io/vida/go-api/config"
 	"gitlab.mugsoft.io/vida/go-api/helpers"
+	"gitlab.mugsoft.io/vida/go-api/helpers/drivers/files/fs"
 	"gitlab.mugsoft.io/vida/go-api/models"
 	"gitlab.mugsoft.io/vida/go-api/services"
 	"gitlab.mugsoft.io/vida/go-api/services/storage"
@@ -69,7 +70,7 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 	} else if math.IsNaN(_f_cost) {
 		return "", fmt.Errorf("cost cannot be non")
 	}
-	__data_url, err := helpers.Multipart_to_data_url(img, LIMIT_FILESIZE, ALLOWED_MIMES)
+	_, data, err := helpers.Multipart_to_byte_slice(img, LIMIT_FILESIZE, ALLOWED_MIMES)
 	if nil != err {
 		return "", fmt.Errorf("cannot read event photo error:%s", err.Error())
 	}
@@ -77,8 +78,14 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 	if nil != err {
 		return "", fmt.Errorf("votable is not a valid bool error:%s", err.Error())
 	}
+	var event_id = helpers.Unique_id()
+	fname, err := fs.Put_event_data(u.Id, event_id, data)
+	if nil != err {
+		return "", err
+	}
 	//}}}
 	event := &models.Event{
+		Id:        event_id,
 		Owner:     u.Id,
 		Title:     title,
 		Loc:       loc,
@@ -86,7 +93,7 @@ func Service_create(token, title, loc, startdate, enddate, details, max_num_gues
 		MaxGuest:  __i_max_num_guests,
 		MinGuest:  __i_min_num_guests,
 		Cost:      _f_cost,
-		Img:       __data_url,
+		Img:       "/static/public/" + fname,
 		Votable:   __b_votable,
 		StartDate: time.Unix(__i_start_date, 0),
 		EndDate:   time.Unix(__i_end_date, 0),
@@ -191,11 +198,15 @@ func Service_update_img(token, event_id string, file io.Reader) (string, error) 
 	if event.Owner != u.Id {
 		return "", fmt.Errorf("event can only be updated by its owner")
 	} //}}}
-	_data_url, err := helpers.Multipart_to_data_url(file, LIMIT_FILESIZE, ALLOWED_MIMES)
+	_, data, err := helpers.Multipart_to_byte_slice(file, LIMIT_FILESIZE, ALLOWED_MIMES)
 	if nil != err {
 		return "", fmt.Errorf("cannot process the file error : %s", err.Error())
 	}
-	return "success", models.Event_update(event_id, "img", _data_url) //}}}
+	fname, err := fs.Put_event_data(u.Id, event_id, data)
+	if nil != err {
+		return "", err
+	}
+	return "success", models.Event_update(event_id, "img", "/static/public/"+fname) //}}}
 }
 func Service_get_by_id(token string, qid string, filter_options interface{}) (interface{}, error) {
 	//{{{

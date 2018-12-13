@@ -56,7 +56,9 @@ func (e *Event) GetGuestIds() []string {
 }
 func Event_new(e *Event) error {
 	//{{{
-	e.Id = helpers.Unique_id()
+	if "" == e.Id {
+		e.Id = helpers.Unique_id()
+	}
 	if "" == e.Owner {
 		return fmt.Errorf("missing event owner")
 	}

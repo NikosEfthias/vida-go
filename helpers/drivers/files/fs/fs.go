@@ -74,3 +74,8 @@ func Put_user_data(user_id string, data []byte) (fname string, err error) { //{{
 	err = Put(fname, data)
 	return
 } //}}}
+func Put_event_data(user_id string, event_id string, data []byte) (fname string, err error) { //{{{
+	fname = user_id + "/" + event_id + "/" + helpers.Unique_id()
+	err = Put(fname, data)
+	return
+} //}}}
