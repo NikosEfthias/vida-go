@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"gitlab.mugsoft.io/vida/go-api/config"
@@ -15,7 +16,8 @@ func db_get() *mgo.Database {
 	if nil != db {
 		return db
 	}
-	_ses, err := mgo.DialWithTimeout(config.Get("DB_ADDR"), time.Second*5)
+	fmt.Println("trying to connect mongo")
+	_ses, err := mgo.DialWithTimeout(config.Get("DB_ADDR"), time.Second*2)
 	if nil != err {
 		panic(err)
 	}
